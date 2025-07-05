@@ -42,6 +42,18 @@ class ExampleResource {
             val currentElement = Json.createObjectBuilder()
             val titleElements = i.select("span.title")
             val (title, platform) = extractTitleAndPlatformRegex(titleElements.text().trim())
+            val platformArray = Json.createArrayBuilder()
+            if (platform.contains("one", true) &&
+                platform.contains("series x", true))
+            {
+                platformArray.add("xbox one")
+                platformArray.add("xbox x")
+            }
+            else
+            {
+                platformArray.add(platform.lowercase())
+            }
+
             val priceJson = Json.createObjectBuilder()
             val priceElements = i.select("span.price")
 
@@ -58,7 +70,7 @@ class ExampleResource {
                 priceJson.add("price", price)
             }
             currentElement.add("title", title)
-                .add("platform", platform)
+                .add("platform", platformArray.build())
                 .add("price", priceJson.build())
 
             result.add("$index", currentElement.build())
@@ -71,7 +83,7 @@ class ExampleResource {
     @Produces(MediaType.APPLICATION_JSON)
     suspend fun jocuriNoi(): JsonObject?
     {
-        val doc: Document = Ksoup.parseGetRequest(url = "https://www.jocurinoi.ro/toate-jocurile&limit=${limit}")
+        val doc: Document = Ksoup.parseGetRequest(url = "https://www.jocurinoi.ro/toate-jocurile&filter_id=527&limit=${limit}")
         val temp = doc.select("div.product-layout")
         val result: JsonObjectBuilder = Json.createObjectBuilder()
         var index = 0
@@ -79,7 +91,12 @@ class ExampleResource {
         for (i in temp) {
             index++
             val currentElement = Json.createObjectBuilder()
-            val platform: String = i.select("div.product-platform").text().trim()
+            val platformElements = i.select("div.product-platform")
+            val platformJson = Json.createArrayBuilder()
+            for (platformElement in platformElements) {
+                platformJson.add(platformElement.text().trim().lowercase())
+            }
+
             val price = i.select("span.price").text().trim()
             val oldPrice = i.select("span.market_price").text().trim()
             val title: String = i.select("a[href]").text().trim()
@@ -92,7 +109,7 @@ class ExampleResource {
             }
 
             currentElement.add("title", title)
-                .add("platform", platform)
+                .add("platform",  platformJson.build())
                 .add("price", priceJson.build())
 
             result.add("$index", currentElement.build())

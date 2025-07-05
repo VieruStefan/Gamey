@@ -12,6 +12,7 @@ repositories {
 val quarkusPlatformGroupId: String by project
 val quarkusPlatformArtifactId: String by project
 val quarkusPlatformVersion: String by project
+val ktor_version: String by project
 
 dependencies {
     implementation(enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}"))
@@ -21,6 +22,8 @@ dependencies {
     implementation("io.quarkus:quarkus-rest")
     implementation("com.fleeksoft.ksoup:ksoup:0.2.2")
     implementation("com.fleeksoft.ksoup:ksoup-network:0.2.2")
+    implementation ("io.ktor:ktor-client-core:${ktor_version}")
+    implementation("io.ktor:ktor-client-cio:${ktor_version}")
     testImplementation("io.quarkus:quarkus-junit5")
     testImplementation("io.rest-assured:rest-assured")
 }
