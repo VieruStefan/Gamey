@@ -23,20 +23,16 @@ public class DiffbotService
                                        .queryParam("url", resource)
                                        .build().toUriString();
       WebClient client = WebClient.create();
-      client.get().uri(uri).accept(MediaType.APPLICATION_JSON).retrieve().bodyToMono(String.class)
-            .subscribe(
-            response ->
-            {
-               System.out.println(response);
-            },
-            error ->
-            {
-               System.err.println(error);
-            },
-            () ->
-            {
-               System.out.println("Api call done");
-            }
-            );
+      client.get().uri(uri).accept(MediaType.APPLICATION_JSON).retrieve().bodyToMono(String.class).subscribe(
+      response ->
+      {
+         System.out.println(response);
+      }, error ->
+      {
+         System.err.println(error);
+      }, () ->
+      {
+         System.out.println("Api call done");
+      });
    }
 }

@@ -22,7 +22,7 @@ public class Diffbot
 {
    final static List<String> websites = List.of(
    "https://www.jocurinoi.ro/toate-jocurile%26filter_id=527%26limit=100",
-   "https://www.buy2play.ro/categorie-produs/jocuri/jocuri-playstation/jocuri-ps5-noi/?per_page=100",
+   "https://www.buy2play.ro/categorie-produs/jocuri/jocuri-playstation/jocuri-ps5-noi/",
    "https://altex.ro/jocuri-ps5/cpl/",
    "https://www.lumea-jocurilor.ro/ps5/jatekok",
    "https://www.eneba.com/ro/store/psn-games",
@@ -45,8 +45,8 @@ public class Diffbot
    {
       for (String website : websites)
       {
-         Thread.sleep(1000);
          kafkaService.sendMessage("websites", website);
+         Thread.sleep(10000);
       }
       return "hello";
    }
