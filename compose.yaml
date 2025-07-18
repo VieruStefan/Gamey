@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  service-master:
+    image: dis/master:latest
+    container_name: master-container
+    ports:
+      - "7001:8090"
+    networks:
+      - frontend
+      - backend
+
+  service-kafka:
+    image: apache/kafka:latest
+    container_name: kafka-container
+    ports:
+      - "7002:9092"
+    networks:
+      - backend
+networks:
+  frontend:
+    driver: bridge
+    driver_opts:
+      com.docker.network.bridge.host_binding_ipv4: "127.0.0.1"
+  backend:
