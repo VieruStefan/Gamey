@@ -1,6 +1,13 @@
-terraform init
-terraform validate
+# To run the app
+* `docker compose build --no-cache`
+* `docker compose up`
+* `docker compose down`
 
-docker build --build-arg JAR_FILE=build/libs/\*.jar -t dis/master .
-docker run -p 8090:8090 dis/master:latest
-docker network create kafka_network
+The kafka server is open for Docker containers on `kafka:9093`. 
+
+The used topics are:
+* `web-scraping-list` - queue API call for an entire page
+* `web-scraping-product` - queue API call for a single page
+* `web-scraping-list-output` - the output queue with the result of the API
+* `web-scraping-product-output` - the output queue with the result of the API
+

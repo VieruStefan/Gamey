@@ -1,5 +1,6 @@
 package org.dis.scraper.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -15,6 +16,14 @@ public class DiffbotService
    private String apiToken;
    String basepath = "https://api.diffbot.com/v3/";
    
+   KafkaService kafkaService;
+   
+   @Autowired
+   public DiffbotService(KafkaService kafkaService)
+   {
+      this.kafkaService = kafkaService;
+   }
+   
    public void sendRequest(String api, String resource)
    {
       String uri = UriComponentsBuilder.fromUriString(basepath)
@@ -26,7 +35,8 @@ public class DiffbotService
       client.get().uri(uri).accept(MediaType.APPLICATION_JSON).retrieve().bodyToMono(String.class).subscribe(
       response ->
       {
-         System.out.println(response);
+         kafkaService.sendMessage("web-scraping-" + api + "-output", response);
+         System.out.println("Response sent to web-scraping-" + api + "-output");
       }, error ->
       {
          System.err.println(error);

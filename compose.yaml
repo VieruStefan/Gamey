@@ -1,25 +1,59 @@
-version: '3.8'
+name: dis
 
 services:
-  service-master:
-    image: dis/master:latest
-    container_name: master-container
+  kafka:
+    image: apache/kafka-native
     ports:
-      - "7001:8090"
-    networks:
-      - frontend
-      - backend
+      - "9092:9092"
+    environment:
+      KAFKA_LISTENERS: CONTROLLER://localhost:9091,HOST://0.0.0.0:9092,DOCKER://0.0.0.0:9093
+      KAFKA_ADVERTISED_LISTENERS: HOST://localhost:9092,DOCKER://kafka:9093
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,DOCKER:PLAINTEXT,HOST:PLAINTEXT
 
-  service-kafka:
-    image: apache/kafka:latest
-    container_name: kafka-container
-    ports:
-      - "7002:9092"
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@localhost:9091
+
+      KAFKA_INTER_BROKER_LISTENER_NAME: DOCKER
+
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     networks:
-      - backend
+      - kafka-network
+
+  service-master:
+    build:
+      context: ./master
+      dockerfile: Dockerfile
+    container_name: master
+    networks:
+      backend:
+      kafka-network:
+
+  service-scraper:
+    build:
+      context: ./scraper
+      dockerfile: Dockerfile
+    container_name: scraper
+    networks:
+      kafka-network:
+
+  service-reducer:
+    build:
+      context: ./reducer
+      dockerfile: Dockerfile
+    container_name: reducer
+    networks:
+      kafka-network:
+
+  test-service:
+    image: curlimages/curl
+    command: [ "tail", "-f", "/dev/null" ]
+    networks:
+      backend:
+
 networks:
-  frontend:
-    driver: bridge
-    driver_opts:
-      com.docker.network.bridge.host_binding_ipv4: "127.0.0.1"
   backend:
+    driver: bridge
+  kafka-network:
+    driver: bridge

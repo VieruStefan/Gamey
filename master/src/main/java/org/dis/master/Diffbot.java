@@ -5,6 +5,8 @@ import org.dis.master.service.KafkaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.config.TopicBuilder;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
@@ -32,6 +34,7 @@ public class Diffbot
    "https://www.mobile-zone.ro/jocuri-ps5",
    "https://www.cel.ro/jocuri/platforma-i1090/playstation-5/"
    );
+   
    KafkaService kafkaService;
    
    @Autowired
@@ -40,14 +43,23 @@ public class Diffbot
       this.kafkaService = kafkaService;
    }
    
-   @GetMapping("/send")
-   public String send() throws InterruptedException
+   @GetMapping("/list")
+   public ResponseEntity<String> list() throws InterruptedException
    {
       for (String website : websites)
       {
-         kafkaService.sendMessage("websites", website);
+         kafkaService.sendMessage("web-scraping-list", website);
+         System.out.println("Sent " + website + " to be scraped.");
          Thread.sleep(10000);
       }
-      return "hello";
+      return new ResponseEntity<>("All websites are to be scraped with DiffBot List", HttpStatus.OK);
+   }
+   
+   @GetMapping("/product")
+   public ResponseEntity<String> product()
+   {
+      kafkaService.sendMessage("web-scraping-product",
+                               "https://www.eneba.com/ro/psn-ea-sportstm-college-football-26-standard-edition-ps5-psn-key-united-states");
+      return new ResponseEntity<>("Sent product to scraping with DiffBot Product.", HttpStatus.OK);
    }
 }
