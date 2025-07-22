@@ -46,11 +46,20 @@ services:
     networks:
       kafka-network:
 
-  test-service:
-    image: curlimages/curl
-    command: [ "tail", "-f", "/dev/null" ]
-    networks:
-      backend:
+#  test-service:
+#    image: curlimages/curl
+#    command: [ "tail", "-f", "/dev/null" ]
+#    networks:
+#      backend:
+  next-app:
+    container_name: next-app
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "3000:3000"
+    network_mode: host
 
 networks:
   backend:
