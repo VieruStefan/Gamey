@@ -1,39 +1,17 @@
-import { useState, useEffect } from "react";
+import { Suspense } from 'react'
+import Sse_Products from '@/app/dashboard/sse_products'
 
 export default async function Page() {
-    const [data, setData] = useState('');
-    const [error, setError] = useState('');
+   const eventSource = new EventSource('http://172.22.0.13:8092/api/events');
 
-    useEffect(() => {
-        const eventSource = new EventSource('http://172.22.0.13:8092/api/events');
-        fetch('http://172.22.0.11:8090/api/diffbot/product')
 
-        eventSource.onmessage = (event) => {
-            setData(event.data);
-            setError('');
-        };
-
-        eventSource.onerror = (err) => {
-            console.error(err);
-            setError('Connection to server lost.');
-        };
-
-        return () => {
-            eventSource.close();
-        };
-    }, []);
-
+    fetch('http://172.22.0.11:8090/api/diffbot/product').then(() => {
+        eventSource.addEventListener('message', event => {
+            console.log(event.data);
+        })
+    })
     return (
-        <div>
-            <div>
-                {error ? (
-                    <p>{error}</p>
-                ) : (
-                    <p>
-                       <span>{data}</span>
-                    </p>
-                )}
-            </div>
-        </div>
-    );
+        <div>Hello</div>
+    )
+
 }
