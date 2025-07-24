@@ -1,6 +1,3 @@
-import { Suspense } from 'react'
-import Sse_Products from '@/app/dashboard/sse_products'
-
 export default async function Page() {
    const eventSource = new EventSource('http://172.22.0.13:8092/api/events');
 
