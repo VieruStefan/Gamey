@@ -29,6 +29,7 @@ services:
     networks:
       kafka-network:
       backend:
+        ipv4_address: 172.20.0.1
 
   service-scraper:
     build:
@@ -56,9 +57,13 @@ services:
       - "3000:3000"
     networks:
       backend:
+        ipv4_address: 172.20.0.2
 
 networks:
   backend:
     driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
   kafka-network:
     driver: bridge
