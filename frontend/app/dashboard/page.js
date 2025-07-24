@@ -1,6 +1,6 @@
 
 export default async function Page() {
-    let data = await fetch('http://master:8090/api/scrape/product').then(res => res.json()).catch(console.error);
+    let data = await fetch('http://master:8090/api/scrape/product');
     let posts = await data.json()
     return (
         <ul>
