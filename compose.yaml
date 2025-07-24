@@ -19,7 +19,7 @@ services:
 
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     networks:
-      - kafka-network
+      kafka-network:
 
   service-master:
     build:
@@ -27,8 +27,8 @@ services:
       dockerfile: Dockerfile
     container_name: master
     networks:
-      backend:
       kafka-network:
+      backend:
 
   service-scraper:
     build:
@@ -46,11 +46,6 @@ services:
     networks:
       kafka-network:
 
-#  test-service:
-#    image: curlimages/curl
-#    command: [ "tail", "-f", "/dev/null" ]
-#    networks:
-#      backend:
   next-app:
     container_name: next-app
     build:
@@ -59,7 +54,8 @@ services:
     restart: always
     ports:
       - "3000:3000"
-    network_mode: host
+    networks:
+      backend:
 
 networks:
   backend:
