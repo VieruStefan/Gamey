@@ -24,6 +24,7 @@ services:
   service-master:
     build:
       context: ./master
+      target: prod
       dockerfile: Dockerfile
     container_name: master
     networks:
@@ -34,6 +35,7 @@ services:
   service-scraper:
     build:
       context: ./scraper
+      target: prod
       dockerfile: Dockerfile
     container_name: scraper
     networks:
@@ -42,6 +44,7 @@ services:
   service-reducer:
     build:
       context: ./reducer
+      target: prod
       dockerfile: Dockerfile
     container_name: reducer
     networks:

@@ -3,7 +3,7 @@ COPY --chown=gradle:gradle . /home/gradle/src
 WORKDIR /home/gradle/src
 RUN gradle build --no-daemon 
 
-FROM openjdk:21-jdk AS deploy
+FROM openjdk:21-jdk AS prod
 
 EXPOSE 8090
 
