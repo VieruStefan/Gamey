@@ -1,3 +1,4 @@
+import {EventSource} from "eventsource";
 export default async function Page() {
    const eventSource = new EventSource('http://172.22.0.13:8092/api/events');
 
