@@ -29,7 +29,7 @@ services:
     container_name: master
     networks:
       kafka-network:
-      backend:
+      frontend:
         ipv4_address: 172.22.0.11
 
   service-scraper:
@@ -49,6 +49,8 @@ services:
     container_name: reducer
     networks:
       kafka-network:
+      frontend:
+        ipv4_address: 172.22.0.13
 
   next-app:
     container_name: next-app
@@ -59,11 +61,11 @@ services:
     ports:
       - "3000:3000"
     networks:
-      backend:
+      frontend:
         ipv4_address: 172.22.0.12
 
 networks:
-  backend:
+  frontend:
     driver: bridge
     ipam:
       config:
