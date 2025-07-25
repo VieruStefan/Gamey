@@ -1,15 +1,10 @@
-import {EventSource} from "eventsource";
-export default async function Page() {
-   const eventSource = new EventSource('http://172.22.0.13:8092/api/events');
+import SseComponent from "@/app/dashboard/SseComponent";
 
-
-    fetch('http://172.22.0.11:8090/api/diffbot/product').then(() => {
-        eventSource.addEventListener('message', event => {
-            console.log(event.data);
-        })
-    })
+export default function Page() {
     return (
-        <div>Hello</div>
-    )
-
+        <main>
+            <h1>My Application</h1>
+            <SseComponent />
+        </main>
+    );
 }

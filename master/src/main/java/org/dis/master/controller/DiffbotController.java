@@ -1,26 +1,20 @@
-package org.dis.master;
+package org.dis.master.controller;
 
-import org.apache.kafka.clients.admin.NewTopic;
 import org.dis.master.service.KafkaService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.ApplicationRunner;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.kafka.config.TopicBuilder;
-import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.support.SendResult;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping("/api/diffbot")
-public class Diffbot
+@CrossOrigin("localhost:3000")
+public class DiffbotController
 {
    final static List<String> websites = List.of(
    "https://www.jocurinoi.ro/toate-jocurile%26filter_id=527%26limit=100",
@@ -35,13 +29,8 @@ public class Diffbot
    "https://www.cel.ro/jocuri/platforma-i1090/playstation-5/"
    );
    
-   KafkaService kafkaService;
-   
    @Autowired
-   public Diffbot(KafkaService kafkaService)
-   {
-      this.kafkaService = kafkaService;
-   }
+   KafkaService kafkaService;
    
    @GetMapping("/list")
    public ResponseEntity<String> list() throws InterruptedException

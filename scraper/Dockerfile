@@ -5,7 +5,7 @@ RUN gradle build --no-daemon
 
 FROM openjdk:21-jdk AS prod
 
-EXPOSE 8090
+EXPOSE 8091
 
 RUN mkdir /app
 
