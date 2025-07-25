@@ -2,8 +2,6 @@ package org.dis.reducer.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -16,18 +14,18 @@ public class ReducerService
    private final Sinks.Many<String> updateSink = Sinks.many().multicast().onBackpressureBuffer();
    
    @KafkaListener(topics = "web-scraping-list-output", groupId = "website-scraping")
-   public ResponseEntity<String> listenOnOutputList(String list)
+   public void listenOnOutputList(String list)
    {
       try
       {
          Object jsonObject = objectMapper.readValue(list, Object.class);
          String jsonResponse = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonObject);
          System.out.println("Received list " + jsonResponse);
-         return new ResponseEntity<>(jsonResponse, HttpStatus.OK);
+         updateSink.tryEmitNext(jsonResponse);
       }
       catch (JsonProcessingException e)
       {
-         return new ResponseEntity<>("Cannot process response.", HttpStatus.BAD_REQUEST);
+         System.err.println("Cannot process product JSON: " + e.getMessage());
       }
    }
    

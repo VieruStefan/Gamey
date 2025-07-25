@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/diffbot")
-@CrossOrigin("localhost:3000")
+@CrossOrigin("http://localhost:3000")
 public class DiffbotController
 {
    final static List<String> websites = List.of(

@@ -7,7 +7,8 @@ export default function SseComponent() {
     const [isConnected, setIsConnected] = useState(false);
 
     useEffect(() => {
-        const eventSource = new EventSource('http://localhost:8090/sse/stream');
+        fetch('http://localhost:8090/api/diffbot/product')
+        const eventSource = new EventSource('http://localhost:8092/sse/stream');
 
         eventSource.onopen = () => {
             console.log('SSE connection established.');
@@ -19,7 +20,7 @@ export default function SseComponent() {
             console.log('Received generic SSE message:', event.data);
         };
 
-        eventSource.addEventListener('periodic-update', (event) => {
+        eventSource.addEventListener('product-update', (event) => {
             console.log('Received periodic-update event:', event.data);
             setLatestUpdate(event.data);
         });

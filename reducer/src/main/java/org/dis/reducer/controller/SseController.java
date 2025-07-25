@@ -1,29 +1,33 @@
 package org.dis.reducer.controller;
 
 import org.dis.reducer.service.ReducerService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.codec.ServerSentEvent;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 @RestController
+@RequestMapping("/sse")
+@CrossOrigin("http://localhost:3000")
 public class SseController {
    
-   private final ReducerService updateService;
+   @Autowired
+   ReducerService reducerService;
    
-   // Inject the service that provides the stream of Kafka messages
-   public SseController(ReducerService updateService) {
-      this.updateService = updateService;
-   }
-   
-   @GetMapping(value = "/api/events", produces = "text/event-stream")
-   public Flux<ServerSentEvent<String>> handleSse() {
-      // 1. Get the stream of product updates from our service
-      return updateService.getUpdateStream()
-                                 // 2. Map each product JSON string into a ServerSentEvent
-                                 .map(productJson -> ServerSentEvent.<String>builder()
-                                                                    .event("product-update") // A custom event name
-                                                                    .data(productJson)
-                                                                    .build());
+   @GetMapping("/stream")
+   public Flux<ServerSentEvent<String>> streamEvents() {
+//      return Flux.interval(Duration.ofSeconds(10))
+      AtomicInteger i = new AtomicInteger(0);
+      return reducerService.getUpdateStream()
+                 .map(productJson -> ServerSentEvent.<String>builder()
+                                                 .id(String.valueOf(i.addAndGet(1)))
+                                                 .event("product-update")
+                                                 .data(productJson)
+                                                 .build());
    }
 }

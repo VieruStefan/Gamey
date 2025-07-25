@@ -17,7 +17,6 @@ public class SseController {
    
    @GetMapping("/stream")
    public Flux<ServerSentEvent<String>> streamEvents() {
-      // Flux.interval creates a stream that emits a new value every second.
       return Flux.interval(Duration.ofSeconds(10))
                  .map(sequence -> ServerSentEvent.<String>builder()
                                                  .id(String.valueOf(sequence))
