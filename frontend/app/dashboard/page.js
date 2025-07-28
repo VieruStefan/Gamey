@@ -1,4 +1,4 @@
-import SseComponent from "@/app/dashboard/SseComponent";
+import { SseComponent } from "@/app/dashboard/SseComponent";
 
 export default function Page() {
     return (

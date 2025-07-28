@@ -46,8 +46,8 @@ public class ReducerService
       }
    }
    
-   public Flux<String> getUpdateStream()
+   public Sinks.Many<String> getUpdateSink()
    {
-      return updateSink.asFlux();
+      return updateSink;
    }
 }

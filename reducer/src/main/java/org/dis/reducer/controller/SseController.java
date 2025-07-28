@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 
+import java.time.Duration;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @RestController
@@ -16,18 +18,33 @@ import java.util.concurrent.atomic.AtomicInteger;
 @CrossOrigin("http://localhost:3000")
 public class SseController {
    
-   @Autowired
    ReducerService reducerService;
+   private final AtomicInteger i = new AtomicInteger(0);
+   Flux<ServerSentEvent<String>> heartbeat = Flux.interval(Duration.ofSeconds(5))
+                                                 .map(m ->
+                                                      ServerSentEvent.<String>builder()
+                                                                     .event("heartbeat")
+                                                                     .data("keep-alive")
+                                                                     .build()
+                                                 );
+   
+   public SseController(ReducerService reducerService)
+   {
+      this.reducerService = reducerService;
+   }
    
    @GetMapping("/stream")
    public Flux<ServerSentEvent<String>> streamEvents() {
-//      return Flux.interval(Duration.ofSeconds(10))
-      AtomicInteger i = new AtomicInteger(0);
-      return reducerService.getUpdateStream()
-                 .map(productJson -> ServerSentEvent.<String>builder()
-                                                 .id(String.valueOf(i.addAndGet(1)))
-                                                 .event("product-update")
-                                                 .data(productJson)
-                                                 .build());
+      return reducerService.getUpdateSink()
+                           .asFlux()
+                           .delayElements(Duration.ofMillis(500))
+                           .map(productJson ->
+                                ServerSentEvent.<String>builder()
+                                               .id(String.valueOf(i.addAndGet(1)))
+                                               .event("product-update")
+                                               .data(productJson)
+                                               .build()
+                           )
+                           .mergeWith(heartbeat);
    }
 }

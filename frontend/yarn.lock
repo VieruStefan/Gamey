@@ -308,6 +308,11 @@
   resolved "https://registry.yarnpkg.com/@next/env/-/env-15.4.2.tgz#1f0536974e6d81cc1f0e7f1221b824a61310e324"
   integrity sha512-kd7MvW3pAP7tmk1NaiX4yG15xb2l4gNhteKQxt3f+NGR22qwPymn9RBuv26QKfIKmfo6z2NpgU8W2RT0s0jlvg==
 
+"@next/env@^15.4.4":
+  version "15.4.4"
+  resolved "https://registry.yarnpkg.com/@next/env/-/env-15.4.4.tgz#ada0a3bdecc5c11fedd2b8cbf4e2b0b999a5324f"
+  integrity sha512-SJKOOkULKENyHSYXE5+KiFU6itcIb6wSBjgM92meK0HVKpo94dNOLZVdLLuS7/BxImROkGoPsjR4EnuDucqiiA==
+
 "@next/eslint-plugin-next@15.4.2":
   version "15.4.2"
   resolved "https://registry.yarnpkg.com/@next/eslint-plugin-next/-/eslint-plugin-next-15.4.2.tgz#283d342e004d5598ea6a2583613ec448348da314"

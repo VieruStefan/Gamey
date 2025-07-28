@@ -2,38 +2,63 @@
 'use client'
 import { useEffect, useState } from 'react';
 
-export default function SseComponent() {
+export function SseComponent() {
     const [latestUpdate, setLatestUpdate] = useState('');
     const [isConnected, setIsConnected] = useState(false);
 
     useEffect(() => {
-        fetch('http://localhost:8090/api/diffbot/product')
-        const eventSource = new EventSource('http://localhost:8092/sse/stream');
+        let timeoutId;
+        const sseUrl = `${process.env.REDUCER_SSE_URL}/sse/stream`;
+        const eventSource = new EventSource(sseUrl);
+        fetch(`${process.env.MASTER_API_URL}/api/diffbot/product`)
+            .then(() => console.log("Initial fetch successful."))
+            .catch(e => console.error("Fetch failed: " + e))
+
+        const resetTimeout = () =>
+        {
+            clearTimeout(timeoutId);
+
+            timeoutId = setTimeout(() =>
+            {
+                console.log('sse timeout');
+                eventSource.close();
+                setIsConnected(false);
+            }, 10000);
+        };
 
         eventSource.onopen = () => {
             console.log('SSE connection established.');
             setIsConnected(true);
+            resetTimeout();
         };
 
         // Default handler for messages without a specific 'event' name
         eventSource.onmessage = (event) => {
             console.log('Received generic SSE message:', event.data);
+            resetTimeout();
         };
 
         eventSource.addEventListener('product-update', (event) => {
             console.log('Received periodic-update event:', event.data);
             setLatestUpdate(event.data);
+            resetTimeout();
+        });
+
+        eventSource.addEventListener('heartbeat', (event) => {
+            console.log('Received heartbeat event:', event.data);
+            resetTimeout();
         });
 
         eventSource.onerror = (error) => {
             console.error('EventSource failed:', error);
             eventSource.close();
             setIsConnected(false);
+            clearTimeout(timeoutId);
         };
 
-        // Cleanup function to close the connection when the component unmounts
         return () => {
             console.log('SSE connection closed.');
+            clearTimeout(timeoutId);
             eventSource.close();
         };
     }, []);
