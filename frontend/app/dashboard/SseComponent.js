@@ -10,7 +10,7 @@ export function SseComponent() {
         let timeoutId;
         const sseUrl = `${process.env.REDUCER_SSE_URL}/sse/stream`;
         const eventSource = new EventSource(sseUrl);
-        fetch(`${process.env.MASTER_API_URL}/api/diffbot/product`)
+        fetch(`${process.env.MASTER_API_URL}/api/diffbot/list`)
             .then(() => console.log("Initial fetch successful."))
             .catch(e => console.error("Fetch failed: " + e))
 

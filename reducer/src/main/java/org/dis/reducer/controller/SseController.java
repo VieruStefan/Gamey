@@ -1,7 +1,6 @@
 package org.dis.reducer.controller;
 
 import org.dis.reducer.service.ReducerService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.codec.ServerSentEvent;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,7 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 
 import java.time.Duration;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @RestController
@@ -20,7 +18,7 @@ public class SseController {
    
    ReducerService reducerService;
    private final AtomicInteger i = new AtomicInteger(0);
-   Flux<ServerSentEvent<String>> heartbeat = Flux.interval(Duration.ofSeconds(5))
+   Flux<ServerSentEvent<String>> heartbeat = Flux.interval(Duration.ofSeconds(9))
                                                  .map(m ->
                                                       ServerSentEvent.<String>builder()
                                                                      .event("heartbeat")
@@ -37,7 +35,7 @@ public class SseController {
    public Flux<ServerSentEvent<String>> streamEvents() {
       return reducerService.getUpdateSink()
                            .asFlux()
-                           .delayElements(Duration.ofMillis(500))
+//                           .delayElements(Duration.ofMillis(500))
                            .map(productJson ->
                                 ServerSentEvent.<String>builder()
                                                .id(String.valueOf(i.addAndGet(1)))

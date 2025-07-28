@@ -1,14 +1,19 @@
 package org.dis.master.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.dis.master.dto.DiffbotResponseDto;
+import org.dis.master.dto.ProductDto;
 import org.dis.master.service.KafkaService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -16,21 +21,26 @@ import java.util.List;
 @CrossOrigin("http://localhost:3000")
 public class DiffbotController
 {
+   private final ObjectMapper objectMapper = new ObjectMapper();
    final static List<String> websites = List.of(
-   "https://www.jocurinoi.ro/toate-jocurile%26filter_id=527%26limit=100",
-   "https://www.buy2play.ro/categorie-produs/jocuri/jocuri-playstation/jocuri-ps5-noi/",
-   "https://altex.ro/jocuri-ps5/cpl/",
-   "https://www.lumea-jocurilor.ro/ps5/jatekok",
-   "https://www.eneba.com/ro/store/psn-games",
-//        "https://www.eneba.com/ro/psn-ea-sportstm-college-football-26-standard-edition-ps5-psn-key-united-states",
-//        product
-   "https://www.skroutz.ro/c/4306/jocuri-ps5.html",
-   "https://www.mobile-zone.ro/jocuri-ps5",
-   "https://www.cel.ro/jocuri/platforma-i1090/playstation-5/"
+   "https://www.jocurinoi.ro/toate-jocurile%26filter_id=527%26limit=100"
+//   "https://www.buy2play.ro/categorie-produs/jocuri/jocuri-playstation/jocuri-ps5-noi/",
+//   "https://altex.ro/jocuri-ps5/cpl/",
+//   "https://www.lumea-jocurilor.ro/ps5/jatekok",
+//   "https://www.eneba.com/ro/store/psn-games",
+////        "https://www.eneba.com/ro/psn-ea-sportstm-college-football-26-standard-edition-ps5-psn-key-united-states",
+////        product
+//   "https://www.skroutz.ro/c/4306/jocuri-ps5.html",
+//   "https://www.mobile-zone.ro/jocuri-ps5",
+//   "https://www.cel.ro/jocuri/platforma-i1090/playstation-5/"
    );
    
-   @Autowired
    KafkaService kafkaService;
+   
+   public DiffbotController(KafkaService kafkaService)
+   {
+      this.kafkaService = kafkaService;
+   }
    
    @GetMapping("/list")
    public ResponseEntity<String> list() throws InterruptedException
@@ -44,11 +54,22 @@ public class DiffbotController
       return new ResponseEntity<>("All websites are to be scraped with DiffBot List", HttpStatus.OK);
    }
    
-   @GetMapping("/product")
-   public ResponseEntity<String> product()
+   @KafkaListener(topics = "web-scraping-list-to-products", groupId = "website-scraping")
+   public void product(String jsonData)
    {
-      kafkaService.sendMessage("web-scraping-product",
-                               "https://www.eneba.com/ro/psn-ea-sportstm-college-football-26-standard-edition-ps5-psn-key-united-states");
-      return new ResponseEntity<>("Sent product to scraping with DiffBot Product.", HttpStatus.OK);
+      try
+      {
+         DiffbotResponseDto response = objectMapper.readValue(jsonData, DiffbotResponseDto.class);
+         List<ProductDto> products = response.getObjects().get(0).getItems();
+         System.out.println("Successfully deserialized " + products.size() + " products.");
+         for (ProductDto dto : products) {
+            System.out.println("Processing product: " + dto.getTitle());
+//            kafkaService.sendMessage("web-scraping-product", dto.getLink());
+         }
+      }
+      catch (Exception e)
+      {
+         System.err.println(e.getMessage());
+      }
    }
 }
