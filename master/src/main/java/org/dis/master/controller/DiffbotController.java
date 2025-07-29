@@ -62,9 +62,14 @@ public class DiffbotController
          DiffbotResponseDto response = objectMapper.readValue(jsonData, DiffbotResponseDto.class);
          List<ProductDto> products = response.getObjects().get(0).getItems();
          System.out.println("Successfully deserialized " + products.size() + " products.");
+         int i = 0;
          for (ProductDto dto : products) {
             System.out.println("Processing product: " + dto.getTitle());
-//            kafkaService.sendMessage("web-scraping-product", dto.getLink());
+            kafkaService.sendMessage("web-scraping-product", dto.getLink());
+            if (++i == 2)
+            {
+               break;
+            }
          }
       }
       catch (Exception e)

@@ -1,74 +1,53 @@
-name: dis
+version: '3.9'
 
 services:
-  kafka:
-    image: apache/kafka-native
-    ports:
-      - "9092:9092"
-    environment:
-      KAFKA_LISTENERS: CONTROLLER://localhost:9091,HOST://0.0.0.0:9092,DOCKER://0.0.0.0:9093
-      KAFKA_ADVERTISED_LISTENERS: HOST://localhost:9092,DOCKER://kafka:9093
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,DOCKER:PLAINTEXT,HOST:PLAINTEXT
-
-      KAFKA_NODE_ID: 1
-      KAFKA_PROCESS_ROLES: broker,controller
-      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
-      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@localhost:9091
-
-      KAFKA_INTER_BROKER_LISTENER_NAME: DOCKER
-
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-    networks:
-      kafka-network:
-
-  service-master:
-    build:
-      context: ./master
-      target: prod
-      dockerfile: Dockerfile
-    container_name: master
-    networks:
-      kafka-network:
-      frontend:
-        ipv4_address: 172.22.0.11
-
-  service-scraper:
-    build:
-      context: ./scraper
-      target: prod
-      dockerfile: Dockerfile
-    container_name: scraper
-    networks:
-      kafka-network:
-
-  service-reducer:
-    build:
-      context: ./reducer
-      target: prod
-      dockerfile: Dockerfile
-    container_name: reducer
-    networks:
-      kafka-network:
-      frontend:
-        ipv4_address: 172.22.0.13
-
-  next-app:
-    container_name: next-app
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    restart: always
+  frontend:
+    build: ./frontend
     ports:
       - "3000:3000"
     networks:
-      frontend:
-        ipv4_address: 172.22.0.12
+      - app-network
+    depends_on:
+      - master
+
+  master:
+    build: ./master
+    ports:
+      - "8090:8090"
+    networks:
+      - app-network
+
+  scraper:
+    build: ./scraper
+    networks:
+      - app-network
+
+  reducer:
+    build: ./reducer
+    ports:
+      - "8092:8092"
+    networks:
+      - app-network
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    networks:
+      - app-network
+    environment:
+      CLUSTER_ID: 'IdILjb8pSgadtg2Huzaz0g'
+      KAFKA_PROCESS_ROLES: 'broker,controller'
+      KAFKA_NODE_ID: 1
+      KAFKA_LISTENERS: 'PLAINTEXT://kafka:9092,CONTROLLER://kafka:9093'
+      KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://kafka:9092'
+      KAFKA_INTER_BROKER_LISTENER_NAME: 'PLAINTEXT'
+      KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
+      KAFKA_CONTROLLER_QUORUM_VOTERS: '1@kafka:9093'
+
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
 
 networks:
-  frontend:
-    driver: bridge
-    ipam:
-      config:
-        - subnet: 172.22.0.0/16
-  kafka-network:
+  app-network:
     driver: bridge
