@@ -2,6 +2,8 @@ package org.dis.reducer.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Sinks;
@@ -9,6 +11,7 @@ import reactor.core.publisher.Sinks;
 @Service
 public class ReducerService
 {
+   private static final Logger logger = LoggerFactory.getLogger(ReducerService.class);
    private final KafkaService kafkaService;
    ObjectMapper objectMapper = new ObjectMapper();
    private final Sinks.Many<String> updateSink = Sinks.many().multicast().onBackpressureBuffer();
@@ -25,12 +28,12 @@ public class ReducerService
       {
          Object jsonObject = objectMapper.readValue(list, Object.class);
          String jsonResponse = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonObject);
-         System.out.println("Received list " + jsonResponse);
+         logger.info("Received list {}", jsonResponse);
          kafkaService.sendMessage("web-scraping-list-to-products", jsonResponse);
       }
       catch (JsonProcessingException e)
       {
-         System.err.println("Cannot process product JSON: " + e.getMessage());
+         logger.error("Cannot process list JSON: {}", e.getMessage());
       }
    }
    
@@ -40,11 +43,11 @@ public class ReducerService
       {
          Object jsonObject = objectMapper.readValue(product, Object.class);
          String jsonResponse = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonObject);
-         System.out.println("Received product " + jsonResponse);
+         logger.info("Received product {}", jsonResponse);
          updateSink.tryEmitNext(jsonResponse);
          
       } catch (JsonProcessingException e) {
-         System.err.println("Cannot process product JSON: " + e.getMessage());
+         logger.error("Cannot process product JSON: {}", e.getMessage());
          // Optionally, you could push an error event to the sink
          // productUpdateSink.tryEmitError(e);
       }

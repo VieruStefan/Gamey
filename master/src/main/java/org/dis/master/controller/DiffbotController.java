@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.dis.master.dto.DiffbotResponseDto;
 import org.dis.master.dto.ProductDto;
 import org.dis.master.service.KafkaService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -21,6 +23,7 @@ import java.util.List;
 @CrossOrigin("http://localhost:3000")
 public class DiffbotController
 {
+   private static final Logger logger = LoggerFactory.getLogger(DiffbotController.class);
    private final ObjectMapper objectMapper = new ObjectMapper();
    final static List<String> websites = List.of(
    "https://www.jocurinoi.ro/toate-jocurile%26filter_id=527%26limit=100"
@@ -48,7 +51,7 @@ public class DiffbotController
       for (String website : websites)
       {
          kafkaService.sendMessage("web-scraping-list", website);
-         System.out.println("Sent " + website + " to be scraped.");
+         logger.info("Sent {} to be scraped.", website);
          Thread.sleep(10000);
       }
       return new ResponseEntity<>("All websites are to be scraped with DiffBot List", HttpStatus.OK);
@@ -61,10 +64,10 @@ public class DiffbotController
       {
          DiffbotResponseDto response = objectMapper.readValue(jsonData, DiffbotResponseDto.class);
          List<ProductDto> products = response.getObjects().get(0).getItems();
-         System.out.println("Successfully deserialized " + products.size() + " products.");
+         logger.debug("Successfully deserialized {} products.", products.size());
          int i = 0;
          for (ProductDto dto : products) {
-            System.out.println("Processing product: " + dto.getTitle());
+            logger.debug("Processing product: {}", dto.getTitle());
             kafkaService.sendMessage("web-scraping-product", dto.getLink());
             if (++i == 2)
             {
@@ -74,7 +77,7 @@ public class DiffbotController
       }
       catch (Exception e)
       {
-         System.err.println(e.getMessage());
+         logger.error(e.getMessage());
       }
    }
 }

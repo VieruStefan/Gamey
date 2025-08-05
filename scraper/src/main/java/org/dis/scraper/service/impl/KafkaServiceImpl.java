@@ -1,19 +1,21 @@
-package org.dis.master.service;
+package org.dis.scraper.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.dis.scraper.service.KafkaService;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
-public class KafkaService
+public class KafkaServiceImpl
+implements KafkaService
 {
    private final KafkaTemplate<String, String> kafkaTemplate;
    
-   public KafkaService(KafkaTemplate<String, String> kafkaTemplate)
+   public KafkaServiceImpl(KafkaTemplate<String, String> kafkaTemplate)
    {
       this.kafkaTemplate = kafkaTemplate;
    }
    
+   @Override
    public void sendMessage(String topic, String message)
    {
       kafkaTemplate.send(topic, message);

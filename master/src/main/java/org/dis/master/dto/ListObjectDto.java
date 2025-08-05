@@ -11,7 +11,5 @@ public class ListObjectDto {
    private String pageUrl;
    private String type;
    private String title;
-   
-   // This is the actual list of products you want
    private List<ProductDto> items;
 }
