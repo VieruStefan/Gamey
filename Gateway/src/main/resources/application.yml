@@ -1,0 +1,42 @@
+server:
+  port: 8888
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+            - id: discovery
+              uri: http://localhost:8091
+              predicates:
+                - Path=/discovery/**
+            - id: details
+              uri: http://localhost:8092
+              predicates:
+                - Path=/details/**
+            - id: aggregator
+              uri: http://localhost:8093
+              predicates:
+                - Path=/aggregator/**
+              filters:
+                - StripPrefix=1
+          httpclient:
+            wiretap: true
+          httpserver:
+            wiretap: true
+  kafka:
+    bootstrap-servers: localhost:9092
+    listener:
+      concurrency: 1
+logging:
+  level:
+    web: trace
+    reactor.netty.http.client: info
+    reactor.netty.http.server: info
+
+diffbot:
+  api:
+    token:
+      d0984ff1efff1a0824ae40bf4632ff25

@@ -8,24 +8,27 @@ services:
     networks:
       - app-network
     depends_on:
-      - master
+      - api-gateway
 
-  master:
-    build: ./master
+  api-gateway:
+    build: ./Gateway
     ports:
-      - "8090:8090"
+      - "8888:8888"
     networks:
       - app-network
 
-  scraper:
-    build: ./scraper
+  discovery-worker:
+    build: ./DiscoveryWorker
     networks:
       - app-network
 
-  reducer:
-    build: ./reducer
-    ports:
-      - "8092:8092"
+  detail-worker:
+    build: ./DetailWorker
+    networks:
+      - app-network
+
+  aggregator:
+    build: ./Aggregator
     networks:
       - app-network
 

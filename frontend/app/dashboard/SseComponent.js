@@ -8,9 +8,9 @@ export function SseComponent() {
 
     useEffect(() => {
         let timeoutId;
-        const sseUrl = `${process.env.REDUCER_SSE_URL}/sse/stream`;
+        const sseUrl = `${process.env.REDUCER_SSE_URL}/aggregator/sse/stream`;
         const eventSource = new EventSource(sseUrl);
-        fetch(`${process.env.MASTER_API_URL}/api/diffbot/list`)
+        fetch(`${process.env.MASTER_API_URL}/api/job/create-job`)
             .then(() => console.log("Initial fetch successful."))
             .catch(e => console.error("Fetch failed: " + e))
 
