@@ -1,6 +1,5 @@
-package org.dis.gateway.service.impl;
+package org.dis.gateway.service;
 
-import org.dis.gateway.service.KafkaService;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 

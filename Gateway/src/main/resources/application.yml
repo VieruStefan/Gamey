@@ -26,10 +26,14 @@ spring:
             wiretap: true
           httpserver:
             wiretap: true
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/diffbot_responses
   kafka:
     bootstrap-servers: localhost:9092
     listener:
       concurrency: 1
+
 logging:
   level:
     web: trace
