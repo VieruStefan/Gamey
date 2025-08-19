@@ -29,11 +29,10 @@ public class DiffbotListener {
 
       switch (topic) {
          case "api.product.requests.v1":
-            Thread.sleep(10000);
             processRequest("product", payload);
             break;
          case "api.list.requests.v1":
-            Thread.sleep(5000);
+            Thread.sleep(10000);
             processRequest("list", payload);
             break;
          default:

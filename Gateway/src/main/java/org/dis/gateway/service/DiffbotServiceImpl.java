@@ -2,15 +2,10 @@ package org.dis.gateway.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.dis.gateway.service.dto.ListItemDto;
-import org.dis.gateway.service.dto.ListResponseDto;
-import org.dis.gateway.service.dto.ProductObjectDto;
-import org.dis.gateway.service.dto.ProductResponseDto;
+import org.dis.gateway.repository.ProductRepository;
+import org.dis.gateway.service.dto.*;
 import org.dis.gateway.service.mapper.DiffbotMapper;
-import org.dis.gateway.model.ListItem;
 import org.dis.gateway.model.Product;
-import org.dis.gateway.repository.ListApiResponseRepository;
-import org.dis.gateway.repository.ProductApiResponseRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,16 +33,14 @@ public class DiffbotServiceImpl
    private final KafkaServiceImpl kafkaService;
    private final WebClient client;
    private final DiffbotMapper diffbotMapper;
-   private final ListApiResponseRepository listApiResponseRepository;
-   private final ProductApiResponseRepository productApiResponseRepository;
+   private final ProductRepository productRepository;
 
-   public DiffbotServiceImpl(KafkaServiceImpl kafkaService, WebClient webClient, ObjectMapper objectMapper, DiffbotMapper diffbotMapper, ListApiResponseRepository listApiResponseRepository, ProductApiResponseRepository productApiResponseRepository) {
+   public DiffbotServiceImpl(KafkaServiceImpl kafkaService, WebClient webClient, ObjectMapper objectMapper, DiffbotMapper diffbotMapper, ProductRepository productRepository) {
       this.kafkaService = kafkaService;
       this.client = webClient;
       this.objectMapper = objectMapper;
       this.diffbotMapper = diffbotMapper;
-      this.listApiResponseRepository = listApiResponseRepository;
-      this.productApiResponseRepository = productApiResponseRepository;
+      this.productRepository = productRepository;
    }
 
    @Override
@@ -79,23 +72,18 @@ public class DiffbotServiceImpl
             .subscribe(
                   response -> {
                      try {
-                        if (api.equals("product")) {
-                           ProductResponseDto productResponseDto = objectMapper.readValue(response, ProductResponseDto.class);
-                           ProductObjectDto productObjectDto = productResponseDto.getObjects().getFirst();
-                           Product product = diffbotMapper.fromDto(productObjectDto);
-                           productApiResponseRepository.save(product).subscribe();
-                        } else if (api.equals("list")) {
+                        if (api.equals("list")) {
                            ListResponseDto listResponseDto = objectMapper.readValue(response, ListResponseDto.class);
-                           List<ListItemDto> listItemDto = listResponseDto.getObjects().getFirst().getItems();
-                           for (ListItemDto item : listItemDto) {
-                              ListItem listItem = diffbotMapper.fromDto(item);
-                              listApiResponseRepository.save(listItem).subscribe();
+                           List<ProductDTO> products = listResponseDto.getObjects().getFirst().getProducts();
+                           for (ProductDTO productDto : products) {
+                              Product product = diffbotMapper.fromDto(productDto);
+                              productRepository.save(product).subscribe();
                            }
+                           kafkaService.sendMessage("api." + api + ".responses.v1", response);
+                           logger.info("[{}] Successfully processed and sent to Kafka for api='{}'", requestId, api);
                         } else {
                            throw new RuntimeException("Cannot deserialize response from " + api);
                         }
-                        kafkaService.sendMessage("api." + api + ".responses.v1", response);
-                        logger.info("[{}] Successfully processed and sent to Kafka for api='{}'", requestId, api);
                      }
                      catch (JsonProcessingException e)
                      {
