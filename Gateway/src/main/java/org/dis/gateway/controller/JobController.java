@@ -16,7 +16,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/job")
-//@CrossOrigin("http://localhost:3000")
+@CrossOrigin("http://localhost:3000")
 public class JobController {
    private static final Logger logger = LoggerFactory.getLogger(JobController.class);
 
@@ -43,9 +43,9 @@ public class JobController {
       response.put("message", "Job creation process started.");
       response.put("jobId", jobId);
 
-      for (String website : websites) {
-         kafkaService.sendMessage("scraping.request.site-discovery.v1", website);
-      }
+//      for (String website : websites) {
+//         kafkaService.sendMessage("scraping.request.site-discovery.v1", website);
+//      }
       return response;
    }
 }

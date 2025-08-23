@@ -7,9 +7,6 @@ spring:
     gateway:
       server:
         webflux:
-          httpclient:
-            response-timeout: 0
-            connect-timeout: 5000
           discovery:
             locator:
               enabled: true
@@ -29,19 +26,19 @@ spring:
                 allow-credentials: true
           routes:
             - id: discovery
-              uri: lb://discovery-worker:8091
+              uri: lb://WORKER.DISCOVERY
               predicates:
                 - Path=/discovery/**
               filters:
                 - StripPrefix=1
             - id: details
-              uri: lb://details-worker:8092
+              uri: lb://WORKER.DETAIL
               predicates:
                 - Path=/details/**
               filters:
                 - StripPrefix=1
             - id: aggregator
-              uri: lb://aggregator:8093
+              uri: lb://AGGREGATOR
               predicates:
                 - Path=/aggregator/**
               filters:

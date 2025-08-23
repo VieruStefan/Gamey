@@ -13,7 +13,6 @@ public class AggregatorListener
 {
    private static final Logger logger = LoggerFactory.getLogger(AggregatorListener.class);
    ObjectMapper objectMapper = new ObjectMapper();
-//   private final Sinks.Many<String> updateSink = Sinks.many().multicast().onBackpressureBuffer();
    private final Sinks.Many<String> updateSink = Sinks.many().replay().latest();
 
 
