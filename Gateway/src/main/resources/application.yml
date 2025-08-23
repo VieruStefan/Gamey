@@ -7,32 +7,50 @@ spring:
     gateway:
       server:
         webflux:
+          httpclient:
+            response-timeout: 0
+            connect-timeout: 5000
+          discovery:
+            locator:
+              enabled: true
+              lower-case-service-id: true
+          globalcors:
+            cors-configurations:
+              '[/**]':
+                allowed-origins: "http://localhost:3000"
+                allowed-methods:
+                  - GET
+                  - POST
+                  - PUT
+                  - DELETE
+                  - OPTIONS
+                allowed-headers:
+                  - "*"
+                allow-credentials: true
           routes:
             - id: discovery
-              uri: http://localhost:8091
+              uri: lb://discovery-worker:8091
               predicates:
                 - Path=/discovery/**
+              filters:
+                - StripPrefix=1
             - id: details
-              uri: http://localhost:8092
+              uri: lb://details-worker:8092
               predicates:
                 - Path=/details/**
+              filters:
+                - StripPrefix=1
             - id: aggregator
-              uri: http://localhost:8093
+              uri: lb://aggregator:8093
               predicates:
                 - Path=/aggregator/**
               filters:
                 - StripPrefix=1
-          httpclient:
-            wiretap: true
-          httpserver:
-            wiretap: true
   data:
     mongodb:
-      uri: mongodb://localhost:27017/diffbot_responses
+      uri: mongodb://root:root@mongodb:27017/gamey?authSource=admin
   kafka:
-    bootstrap-servers: localhost:9092
-    listener:
-      concurrency: 1
+    bootstrap-servers: PLAINTEXT://kafka:9092
 
 logging:
   level:
@@ -44,3 +62,7 @@ diffbot:
   api:
     token:
       d0984ff1efff1a0824ae40bf4632ff25
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka:8761/eureka/

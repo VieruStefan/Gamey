@@ -23,7 +23,7 @@ public class DiffbotListener {
    )
    public void processApiRequest(
          String payload,
-         @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) throws InterruptedException {
+         @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
 
       System.out.println("Processing message from topic: " + topic);
 
@@ -32,7 +32,6 @@ public class DiffbotListener {
             processRequest("product", payload);
             break;
          case "api.list.requests.v1":
-            Thread.sleep(10000);
             processRequest("list", payload);
             break;
          default:

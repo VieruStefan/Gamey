@@ -24,7 +24,7 @@ dependencies {
     implementation 'org.springframework.kafka:spring-kafka'
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
     implementation(platform("org.mongodb:mongodb-driver-bom:5.5.1"))
-
+    implementation "org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:4.3.0"
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.kafka:spring-kafka-test'

@@ -35,7 +35,11 @@ public class DiffbotServiceImpl
    private final DiffbotMapper diffbotMapper;
    private final ProductRepository productRepository;
 
-   public DiffbotServiceImpl(KafkaServiceImpl kafkaService, WebClient webClient, ObjectMapper objectMapper, DiffbotMapper diffbotMapper, ProductRepository productRepository) {
+   public DiffbotServiceImpl(KafkaServiceImpl kafkaService,
+                             WebClient webClient,
+                             ObjectMapper objectMapper,
+                             DiffbotMapper diffbotMapper,
+                             ProductRepository productRepository) {
       this.kafkaService = kafkaService;
       this.client = webClient;
       this.objectMapper = objectMapper;
@@ -46,6 +50,10 @@ public class DiffbotServiceImpl
    @Override
    @Transactional
    public void sendRequest(String api, String resource) {
+      if (!api.equals("list"))
+      {
+         logger.error("Invalid api received. Only \"list\" API is supported.");
+      }
       final String requestId = UUID.randomUUID().toString().substring(0, 8);
       String uri = UriComponentsBuilder.fromUriString(basepath)
             .path(api)
@@ -57,11 +65,11 @@ public class DiffbotServiceImpl
 
       logger.info("[{}] Starting request for api='{}', resource='{}'", requestId, api, resource);
 
-      Retry retrySpec = Retry.fixedDelay(5, Duration.ofSeconds(30))
+      Retry retrySpec = Retry.fixedDelay(Long.MAX_VALUE, Duration.ofSeconds(15))
             .filter(throwable -> throwable instanceof WebClientResponseException &&
                   ((WebClientResponseException) throwable).getStatusCode() == HttpStatus.TOO_MANY_REQUESTS)
             .doBeforeRetry(retrySignal ->
-                  logger.warn("[{}] Received 429 Too Many Requests. Retrying in 30 seconds... (Attempt #{})",
+                  logger.warn("[{}] Received 429 Too Many Requests. Retrying in 15 seconds... (Attempt #{})",
                         requestId, retrySignal.totalRetries() + 1));
 
       this.client.get().uri(uri)

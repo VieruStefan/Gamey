@@ -1,4 +1,3 @@
-// In a Next.js/React component
 'use client'
 import { useEffect, useState } from 'react';
 
@@ -8,9 +7,9 @@ export function SseComponent() {
 
     useEffect(() => {
         let timeoutId;
-        const sseUrl = `${process.env.REDUCER_SSE_URL}/aggregator/sse/stream`;
+        const sseUrl = `${process.env.NEXT_PUBLIC_MASTER_API_URL}/aggregator/sse/stream`;
         const eventSource = new EventSource(sseUrl);
-        fetch(`${process.env.MASTER_API_URL}/api/job/create-job`)
+        fetch(`${process.env.NEXT_PUBLIC_REDUCER_SSE_URL}/api/job/create-job`)
             .then(() => console.log("Initial fetch successful."))
             .catch(e => console.error("Fetch failed: " + e))
 

@@ -16,11 +16,10 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/job")
-@CrossOrigin("http://localhost:3000")
+//@CrossOrigin("http://localhost:3000")
 public class JobController {
    private static final Logger logger = LoggerFactory.getLogger(JobController.class);
 
-   private final ObjectMapper objectMapper = new ObjectMapper();
    final static List<String> websites = List.of(
          "https://www.skroutz.ro/c/4306/jocuri-ps5.html",
          "https://www.jocurinoi.ro/toate-jocurile%26limit=100%26filter_id=527",
@@ -28,7 +27,7 @@ public class JobController {
          "https://www.cel.ro/jocuri/",
          "https://www.lumea-jocurilor.ro/jocuri",
          "https://altex.ro/jocuri/cpl/",
-         "https://www.buy2play.ro/categorie-produs/jocuri/?per_page=96"
+         "https://www.buy2play.ro/categorie-produs/jocuri/?per_page=96"
    );
    private final KafkaService kafkaService;
 
@@ -37,7 +36,7 @@ public class JobController {
    }
 
    @GetMapping("/create-job")
-   public Map<String, String> createJob() throws InterruptedException {
+   public Map<String, String> createJob() {
       String jobId = UUID.randomUUID().toString();
       logger.info("New job created with ID: {}", jobId);
       Map<String, String> response = new HashMap<>();

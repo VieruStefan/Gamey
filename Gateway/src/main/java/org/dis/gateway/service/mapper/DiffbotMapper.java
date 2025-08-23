@@ -10,5 +10,7 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface DiffbotMapper {
    Product fromDto(ProductDTO productDTO);
+
+   @Deprecated(forRemoval = true)
    ListItem fromDto(ListItemDto itemDto);
 }

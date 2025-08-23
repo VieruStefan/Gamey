@@ -1,34 +1,60 @@
-version: '3.9'
-
 services:
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
     ports:
       - "3000:3000"
     networks:
       - app-network
-    depends_on:
-      - api-gateway
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
 
   api-gateway:
-    build: ./Gateway
+    build:
+      context: ./Gateway
+      dockerfile: Dockerfile.dev
     ports:
       - "8888:8888"
     networks:
       - app-network
+    depends_on:
+      - eureka
 
   discovery-worker:
-    build: ./DiscoveryWorker
+    build:
+      context: ./DiscoveryWorker
+      dockerfile: Dockerfile.dev
     networks:
       - app-network
+    depends_on:
+      - eureka
 
   detail-worker:
-    build: ./DetailWorker
+    build:
+      context: ./DetailWorker
+      dockerfile: Dockerfile.dev
     networks:
       - app-network
+    depends_on:
+      - eureka
 
   aggregator:
-    build: ./Aggregator
+    build:
+      context: ./Aggregator
+      dockerfile: Dockerfile.dev
+    networks:
+      - app-network
+    depends_on:
+      - eureka
+
+  eureka:
+    build:
+      context: ./Eureka
+      dockerfile: Dockerfile.dev
+    ports:
+      - '8761:8761'
     networks:
       - app-network
 
@@ -51,6 +77,22 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
 
+  mongodb:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    networks:
+      - app-network
+    volumes:
+      - mongodb_data:/data/db
+      - ./mongo-init:/docker-entrypoint-initdb.d
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+
 networks:
   app-network:
     driver: bridge
+
+volumes:
+  mongodb_data:

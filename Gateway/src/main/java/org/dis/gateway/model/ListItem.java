@@ -6,6 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
 @Document(collection = "list_items")
+@Deprecated(forRemoval = true)
 public class ListItem {
    @Id
    private String id;

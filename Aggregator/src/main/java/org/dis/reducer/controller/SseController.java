@@ -15,7 +15,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @RestController
 @RequestMapping("/sse")
-@CrossOrigin("http://localhost:3000")
+//@CrossOrigin("http://localhost:3000")
 public class SseController {
    private static final Logger logger = LoggerFactory.getLogger(SseController.class);
    AggregatorListener reducerService;

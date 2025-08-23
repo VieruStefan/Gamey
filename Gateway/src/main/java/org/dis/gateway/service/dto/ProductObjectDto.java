@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Deprecated(forRemoval = true)
 public class ProductObjectDto {
    @JsonAlias("diffbotUri")
    String id;
