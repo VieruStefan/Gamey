@@ -1,6 +1,5 @@
 package org.dis.gateway.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.dis.gateway.service.KafkaService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,13 +15,13 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/job")
-@CrossOrigin("http://localhost:3000")
+@CrossOrigin(origins = {"http://gamey.gcp:3000", "http://34.171.39.26:3000"})
 public class JobController {
    private static final Logger logger = LoggerFactory.getLogger(JobController.class);
 
    final static List<String> websites = List.of(
+         "https://www.jocurinoi.ro/toate-jocurile&limit=100&filter_id=527",
          "https://www.skroutz.ro/c/4306/jocuri-ps5.html",
-         "https://www.jocurinoi.ro/toate-jocurile%26limit=100%26filter_id=527",
          "https://www.mobile-zone.ro/jocuri",
          "https://www.cel.ro/jocuri/",
          "https://www.lumea-jocurilor.ro/jocuri",
@@ -43,9 +42,10 @@ public class JobController {
       response.put("message", "Job creation process started.");
       response.put("jobId", jobId);
 
-//      for (String website : websites) {
-//         kafkaService.sendMessage("scraping.request.site-discovery.v1", website);
-//      }
+      for (String website : websites) {
+         kafkaService.sendMessage("scraping.request.site-discovery.v1", website);
+         break;
+      }
       return response;
    }
 }

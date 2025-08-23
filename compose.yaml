@@ -2,19 +2,16 @@ services:
   frontend:
     build:
       context: ./frontend
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile.prod
     ports:
       - "3000:3000"
     networks:
       - app-network
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
 
   api-gateway:
     build:
       context: ./Gateway
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile.prod
     ports:
       - "8888:8888"
     networks:
@@ -25,7 +22,7 @@ services:
   discovery-worker:
     build:
       context: ./DiscoveryWorker
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile.prod
     networks:
       - app-network
     depends_on:
@@ -34,7 +31,7 @@ services:
   detail-worker:
     build:
       context: ./DetailWorker
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile.prod
     networks:
       - app-network
     depends_on:
@@ -43,7 +40,7 @@ services:
   aggregator:
     build:
       context: ./Aggregator
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile.prod
     networks:
       - app-network
     depends_on:
@@ -52,7 +49,7 @@ services:
   eureka:
     build:
       context: ./Eureka
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile.prod
     ports:
       - '8761:8761'
     networks:
