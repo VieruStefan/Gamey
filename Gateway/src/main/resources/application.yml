@@ -1,5 +1,6 @@
 server:
   port: 8888
+
 spring:
   application:
     name: api-gateway
@@ -14,7 +15,7 @@ spring:
           globalcors:
             cors-configurations:
               '[/**]':
-                allowed-origins: ["http://34.171.39.26:3000", "http://gamey.gcp:3000"]
+                allowed-origins: ["http://34.171.39.26:3000", "http://gamey.gcp:3000", "http://localhost:3000"]
                 allowed-methods:
                   - GET
                   - POST
@@ -25,6 +26,12 @@ spring:
                   - "*"
                 allow-credentials: true
           routes:
+            - id: gamedata
+              uri: lb://GAME.DATA
+              predicates:
+                - Path=/gamedata/**
+              filters:
+                - StripPrefix=1
             - id: discovery
               uri: lb://WORKER.DISCOVERY
               predicates:
@@ -43,9 +50,6 @@ spring:
                 - Path=/aggregator/**
               filters:
                 - StripPrefix=1
-  data:
-    mongodb:
-      uri: mongodb://root:root@mongodb:27017/gamey?authSource=admin
   kafka:
     bootstrap-servers: PLAINTEXT://kafka:9092
 
@@ -55,11 +59,8 @@ logging:
     reactor.netty.http.client: info
     reactor.netty.http.server: info
 
-diffbot:
-  api:
-    token:
-      d0984ff1efff1a0824ae40bf4632ff25
 eureka:
   client:
     service-url:
       defaultZone: http://eureka:8761/eureka/
+    enabled: true

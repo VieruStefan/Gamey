@@ -1,6 +1,11 @@
 package org.dis.worker.detail.consumer;
 
-import org.dis.worker.detail.service.KafkaService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.dis.worker.detail.model.Product;
+import org.dis.worker.detail.repository.ProductRepository;
+import org.dis.worker.detail.service.dto.ProductDTO;
+import org.dis.worker.detail.service.mapper.ProductMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -9,21 +14,31 @@ import org.springframework.stereotype.Service;
 @Service
 public class DetailListener {
    private static final Logger logger = LoggerFactory.getLogger(DetailListener.class);
-   private final KafkaService kafkaService;
+   private final ProductMapper productMapper;
+   private final ObjectMapper objectMapper;
+   private final ProductRepository productRepository;
 
-   public DetailListener(KafkaService kafkaService) {
-      this.kafkaService = kafkaService;
+   public DetailListener(ProductMapper productMapper, ObjectMapper objectMapper, ProductRepository productRepository) {
+      this.productMapper = productMapper;
+      this.objectMapper = objectMapper;
+      this.productRepository = productRepository;
    }
 
-   @KafkaListener(topics = "scraping.request.product-detail.v1", groupId = "website-scraping")
-   public void sendRequest(String product) {
-      logger.info("Sending product: {} to Product API.", product);
-      kafkaService.sendMessage("api.product.requests.v1", product);
-   }
-
-   @KafkaListener(topics = "api.product.responses.v1", groupId = "website-scraping")
-   public void processResponse(String product) {
-      logger.info("Scraped product: {}", product);
-      kafkaService.sendMessage("scraping.result.product-detail.v1", product);
+   @KafkaListener(topics = "gamedata.products", groupId = "website-scraping")
+   public void receiveProduct(String productJson) {
+      logger.debug("Received product: {} to Product API.", productJson);
+      try {
+         ProductDTO productDto = objectMapper.readValue(productJson, ProductDTO.class);
+         Product product = productMapper.toEntity(productDto);
+         logger.info("Added product {} to database.", productDto.getTitle());
+         productRepository.save(product).subscribe();
+      }
+      catch (JsonProcessingException e) {
+         logger.error("Error parsing product JSON: {}", productJson);
+         logger.error(e.getMessage());
+      }
+      catch (Exception e) {
+         logger.error(e.getMessage());
+      }
    }
 }

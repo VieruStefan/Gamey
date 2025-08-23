@@ -2,18 +2,36 @@ services:
   frontend:
     build:
       context: ./frontend
-      dockerfile: Dockerfile.prod
+      dockerfile: Dockerfile.dev
     ports:
       - "3000:3000"
+    networks:
+      - app-network
+
+  eureka:
+    build:
+      context: ./Eureka
+      dockerfile: Dockerfile.dev
+    ports:
+      - '8761:8761'
     networks:
       - app-network
 
   api-gateway:
     build:
       context: ./Gateway
-      dockerfile: Dockerfile.prod
+      dockerfile: Dockerfile.dev
     ports:
       - "8888:8888"
+    networks:
+      - app-network
+    depends_on:
+      - eureka
+
+  gamedata:
+    build:
+      context: ./GameData
+      dockerfile: Dockerfile.dev
     networks:
       - app-network
     depends_on:
@@ -22,38 +40,30 @@ services:
   discovery-worker:
     build:
       context: ./DiscoveryWorker
-      dockerfile: Dockerfile.prod
+      dockerfile: Dockerfile.dev
     networks:
       - app-network
     depends_on:
       - eureka
+      - diffbot-api
 
   detail-worker:
     build:
       context: ./DetailWorker
-      dockerfile: Dockerfile.prod
+      dockerfile: Dockerfile.dev
     networks:
       - app-network
     depends_on:
       - eureka
 
-  aggregator:
+  diffbot-api:
     build:
-      context: ./Aggregator
-      dockerfile: Dockerfile.prod
+      context: ./DiffbotAPI
+      dockerfile: Dockerfile.dev
     networks:
       - app-network
     depends_on:
       - eureka
-
-  eureka:
-    build:
-      context: ./Eureka
-      dockerfile: Dockerfile.prod
-    ports:
-      - '8761:8761'
-    networks:
-      - app-network
 
   kafka:
     image: confluentinc/cp-kafka:latest

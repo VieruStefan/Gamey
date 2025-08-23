@@ -5,7 +5,7 @@ spring:
   application:
     name: aggregator
   kafka:
-    bootstrap-servers: PLAINTEXT:\\kafka:9092
+    bootstrap-servers: PLAINTEXT://kafka:9092
     consumer:
       group-id: website-scraping
       auto-offset-reset: earliest

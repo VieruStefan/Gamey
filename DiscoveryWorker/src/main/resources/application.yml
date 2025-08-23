@@ -5,7 +5,7 @@ spring:
   application:
     name: worker.discovery
   kafka:
-    bootstrap-servers: PLAINTEXT:\\kafka:9092
+    bootstrap-servers: PLAINTEXT://kafka:9092
     consumer:
       group-id: website-scraping
       auto-offset-reset: earliest
@@ -18,3 +18,4 @@ eureka:
   client:
     service-url:
       defaultZone: http://eureka:8761/eureka/
+    enabled: true

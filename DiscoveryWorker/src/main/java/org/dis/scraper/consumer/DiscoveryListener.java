@@ -23,17 +23,17 @@ public class DiscoveryListener
       this.kafkaService = kafkaService;
    }
    
-   @KafkaListener(topics = "scraping.request.site-discovery.v1", groupId = "website-scraping")
+   @KafkaListener(topics = "api.site-discovery", groupId = "website-scraping")
    public void sendRequest(String site)
    {
       logger.info("Scraping website: {} with API List.", site);
-      kafkaService.sendMessage("api.list.requests.v1", site);
+      kafkaService.sendMessage("api.requests", site);
    }
 
-   @KafkaListener(topics = "api.list.responses.v1", groupId = "website-scraping")
+   @KafkaListener(topics = "api.responses", groupId = "website-scraping")
    public void processResponse(String sites)
    {
-      logger.info("Scraping website: {} with API List.", sites);
+      logger.debug("Processing response: {}.", sites);
       try
       {
          DiffbotResponseDto response = objectMapper.readValue(sites, DiffbotResponseDto.class);
@@ -41,9 +41,10 @@ public class DiscoveryListener
          logger.debug("Successfully deserialized {} products.", products.size());
          int i = 0;
          for (ProductDto dto : products) {
-            logger.debug("Processing product: {}", dto.getTitle());
-            kafkaService.sendMessage("scraping.request.product-detail.v1", dto.getLink());
-            logger.info("Response sent to scraping.request.product-detail.v1");
+            logger.info("Processing product {} with API Details", dto.getTitle());
+            String productJson = objectMapper.writeValueAsString(dto);
+            kafkaService.sendMessage("gamedata.products", productJson);
+            logger.info("Response sent to gamedata.products: {}", productJson);
             if (++i == 2)
             {
                break;

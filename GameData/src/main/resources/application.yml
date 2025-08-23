@@ -1,0 +1,26 @@
+server:
+  port: 8090
+
+spring:
+  application:
+    name: game.data
+  kafka:
+    bootstrap-servers: PLAINTEXT://kafka:9092
+    consumer:
+      group-id: website-scraping
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
+  data:
+    mongodb:
+      uri: mongodb://root:root@mongodb:27017/gamey?authSource=admin
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka:8761/eureka/
+    enabled: true

@@ -1,0 +1,27 @@
+server:
+  port: 8095
+
+spring:
+  application:
+    name: diffbot.api
+  kafka:
+    bootstrap-servers: PLAINTEXT://kafka:9092
+    consumer:
+      group-id: website-scraping
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
+diffbot:
+  api:
+    token:
+      d0984ff1efff1a0824ae40bf4632ff25
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka:8761/eureka/
+    enabled: true

@@ -1,0 +1,236 @@
+.pageWrapper {
+  min-height: 100vh;
+  background-color: #0f172a;
+  padding: 2rem;
+  color: #f1f5f9;
+}
+
+.main {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.backButton {
+  display: inline-flex;    
+  align-items: center;      
+  gap: 0.5rem;             
+  padding: 0.5rem 1rem;
+  background-color: #0f172a;
+  color: #ffffff;
+  border-radius: 0.5rem;
+  text-decoration: none;
+  font-weight: bold;
+  margin-bottom:10px;
+}
+
+.backButton:hover {
+ color:#f97316;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 200px 2fr 1fr;
+  gap: 2rem;
+}
+
+.gameImage {
+  width: 200px;
+  height: auto;
+  border-radius: 0.5rem;
+  object-fit: cover;
+}
+
+.gameInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.gameTitle {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.tags {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.platformTag {
+  background-color: #334155;
+  color: #e2e8f0;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+}
+
+.genreTag {
+  border: 1px solid #f97316;
+  color: #f97316;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.starFilled {
+  color: #f97316;
+}
+
+.starEmpty {
+  color: #475569;
+}
+
+.ratingValue {
+  font-weight: bold;
+}
+
+.reviews {
+  color: #94a3b8;
+}
+
+.sideSection {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.priceCard {
+  background-color: #1e293b;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid #334155;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.priceStore {
+  font-weight: 500;
+}
+
+.priceValue {
+  font-weight: bold;
+  color: #f97316;
+}
+
+.visitButton {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  background-color: #f97316;
+  color: #fff;
+  border: none;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 0.875rem;
+}
+
+.visitButton:hover {
+  background-color: #ea580c;
+}
+.reviewsSection {
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid #ccc;
+  color: #f97316;
+}
+
+.reviewsSection h2 {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.commentList {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.commentCard {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #555; 
+}
+
+.commentUsername {
+  font-weight: bold;
+  color: #f97316; 
+  margin-bottom: 0.25rem;
+}
+
+.commentText {
+  font-size: 0.95rem;
+  color: #ffffff; 
+}
+@media (max-width: 768px) {
+  .pageWrapper {
+    padding: 1rem;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .gameImage {
+    width: 100%;
+    height: auto;
+  }
+
+  .gameTitle {
+    font-size: 1.5rem;
+  }
+
+  .tags {
+    gap: 0.25rem;
+  }
+
+  .priceCard {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .visitButton {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .gameTitle {
+    font-size: 1.25rem;
+  }
+
+  .platformTag,
+  .genreTag {
+    font-size: 0.75rem;
+    padding: 0.2rem 0.4rem;
+  }
+
+  .priceValue {
+    font-size: 1rem;
+  }
+
+  .backButton {
+    padding: 0.4rem 0.75rem;
+    font-size: 0.875rem;
+  }
+
+  .reviewsSection h2 {
+    font-size: 1.1rem;
+  }
+
+  .commentText {
+    font-size: 0.9rem;
+  }
+}
