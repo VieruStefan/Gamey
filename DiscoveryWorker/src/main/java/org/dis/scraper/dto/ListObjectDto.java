@@ -10,7 +10,10 @@ import java.util.List;
 public class ListObjectDto {
    private String type;
    private String pageUrl;
+   private List<String> nextPages;
    private String resolvedPageUrl;
+   private String nextPage;
    private String title;
-   private List<ProductDto> items;
+   private List<Object> items;
+   private List<ProductDTO> products;
 }

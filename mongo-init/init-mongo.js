@@ -7,3 +7,4 @@ db.createUser({
     ]
 });
 db.createCollection('products');
+db.products.createIndex({ "url": 1 }, { unique: true })

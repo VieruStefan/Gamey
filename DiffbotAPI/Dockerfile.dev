@@ -3,6 +3,7 @@ FROM openjdk:21-slim
 EXPOSE 8888
 
 RUN mkdir /app
+RUN mkdir /cache
 
 COPY build/libs/*.jar /app/application.jar
 

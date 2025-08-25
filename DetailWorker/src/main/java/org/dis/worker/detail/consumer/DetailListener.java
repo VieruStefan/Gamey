@@ -26,11 +26,11 @@ public class DetailListener {
 
    @KafkaListener(topics = "gamedata.products", groupId = "website-scraping")
    public void receiveProduct(String productJson) {
-      logger.debug("Received product: {} to Product API.", productJson);
       try {
          ProductDTO productDto = objectMapper.readValue(productJson, ProductDTO.class);
+         logger.debug("Deserialized product: {}.", productDto);
          Product product = productMapper.toEntity(productDto);
-         logger.info("Added product {} to database.", productDto.getTitle());
+         logger.info("Added product {} to database.", product.toString());
          productRepository.save(product).subscribe();
       }
       catch (JsonProcessingException e) {

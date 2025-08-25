@@ -27,6 +27,8 @@ services:
       - app-network
     depends_on:
       - eureka
+    volumes:
+      - ./local-cache:/cache
 
   gamedata:
     build:
@@ -73,6 +75,7 @@ services:
       CLUSTER_ID: 'IdILjb8pSgadtg2Huzaz0g'
       KAFKA_PROCESS_ROLES: 'broker,controller'
       KAFKA_NODE_ID: 1
+      KAFKA_REST_CONSUMER_MAX_POLL_INTERVAL_MS: 464000
       KAFKA_LISTENERS: 'PLAINTEXT://kafka:9092,CONTROLLER://kafka:9093'
       KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://kafka:9092'
       KAFKA_INTER_BROKER_LISTENER_NAME: 'PLAINTEXT'

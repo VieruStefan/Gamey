@@ -18,13 +18,23 @@ public class JobController {
    private static final Logger logger = LoggerFactory.getLogger(JobController.class);
 
    final static List<String> websites = List.of(
-         "https://www.jocurinoi.ro/toate-jocurile&limit=100&filter_id=527",
+         "https://www.lumea-jocurilor.ro/jocuri",
+         "https://www.lumea-jocurilor.ro/jocuri?p=2",
+         "https://www.lumea-jocurilor.ro/jocuri?p=3",
+         "https://www.lumea-jocurilor.ro/jocuri?p=4",
+         "https://www.lumea-jocurilor.ro/jocuri?p=5",
+         "https://www.jocurinoi.ro/toate-jocurile",
+         "https://www.jocurinoi.ro/toate-jocurile?page=2&filter_id=527",
+         "https://www.jocurinoi.ro/toate-jocurile?page=3&filter_id=527",
+         "https://www.jocurinoi.ro/toate-jocurile?page=4&filter_id=527",
+         "https://www.jocurinoi.ro/toate-jocurile?page=5&filter_id=527",
          "https://www.skroutz.ro/c/4306/jocuri-ps5.html",
          "https://www.mobile-zone.ro/jocuri",
+         "https://www.mobile-zone.ro/jocuri?p=2",
          "https://www.cel.ro/jocuri/",
-         "https://www.lumea-jocurilor.ro/jocuri",
-         "https://altex.ro/jocuri/cpl/",
-         "https://www.buy2play.ro/categorie-produs/jocuri/?per_page=96"
+         "https://www.cel.ro/jocuri/0a-2",
+         "https://www.buy2play.ro/categorie-produs/jocuri/",
+         "https://www.buy2play.ro/categorie-produs/jocuri/page/2/"
    );
    private final KafkaService kafkaService;
 
@@ -42,7 +52,6 @@ public class JobController {
 
       for (String website : websites) {
          kafkaService.sendMessage("api.site-discovery", website);
-         break;
       }
       return response;
    }

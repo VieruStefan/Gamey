@@ -49,7 +49,7 @@ public class DiffbotServiceImpl implements DiffbotService {
       logger.info("builder={}", builder);
       logger.info("urlBuilder={}", urlBuilder);
       logger.info("equals={}", urlBuilder.toString().contentEquals(builder));
-      return builder.toString();
+      return urlBuilder.toString();
    }
 
    @Override
@@ -57,20 +57,24 @@ public class DiffbotServiceImpl implements DiffbotService {
       if (!api.equals("list")) {
          logger.error("Invalid api received. Only \"list\" API is supported.");
       }
-      final String requestId = UUID.randomUUID().toString().substring(0, 8);
-      String url = generateUrl(resource);
 
-      Request request = new Request.Builder()
-            .url(url)
-            .build();
+      final String requestId = UUID.randomUUID().toString().substring(0, 8);
       synchronized (okHttpClient) {
+         String url = generateUrl(resource);
+         Request request = new Request.Builder()
+               .url(url)
+               .build();
          Call call = okHttpClient.newCall(request);
          logger.info("[{}] Starting request for uri={}", requestId, url);
          try (Response response = call.execute()) {
-            kafkaService.sendMessage("api.responses", response.body().string());
-            logger.info("[{}] Completed request for uri={} with body={}", requestId, url, response.body().string().substring(0, 128));
+            Thread.sleep(3000);
+            String responseBody = response.body().string();
+            logger.info("[{}] Completed request for uri={} with body={}", requestId, url, responseBody.substring(0, 128));
+            kafkaService.sendMessage("api.responses", responseBody);
          } catch (IOException e) {
             logger.warn("[{}] Error during request for uri={}", requestId, url, e);
+         } catch (InterruptedException e) {
+            throw new RuntimeException(e);
          }
       }
    }

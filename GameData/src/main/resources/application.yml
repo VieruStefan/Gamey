@@ -17,7 +17,7 @@ spring:
 
   data:
     mongodb:
-      uri: mongodb://root:root@mongodb:27017/gamey?authSource=admin
+      uri: mongodb://user:user@mongodb:27017/gamey?authSource=gamey
 
 eureka:
   client:

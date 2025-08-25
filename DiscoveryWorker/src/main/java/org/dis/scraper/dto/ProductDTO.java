@@ -1,15 +1,14 @@
-package org.dis.worker.detail.service.dto;
+package org.dis.scraper.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
-@Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ProductDTO {
-   private String id;
+@Data
+public class ProductDTO
+{
    private String price;
    private String title;
    private String url;
    private String platform;
-   private String gameId;
 }
