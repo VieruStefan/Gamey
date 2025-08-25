@@ -50,10 +50,11 @@ public class JobController {
       response.put("message", "Job creation process started.");
       response.put("jobId", jobId);
 
-      for (String website : websites) {
-         kafkaService.sendMessage("api.site-discovery", website);
-      }
-      return response;
+      throw new RuntimeException("Job creation aborted.");
+//      for (String website : websites) {
+//         kafkaService.sendMessage("api.site-discovery", website);
+//      }
+//      return response;
    }
 
    @GetMapping("/test")

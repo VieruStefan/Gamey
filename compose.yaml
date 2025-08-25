@@ -27,8 +27,6 @@ services:
       - app-network
     depends_on:
       - eureka
-    volumes:
-      - ./local-cache:/cache
 
   gamedata:
     build:
@@ -66,6 +64,8 @@ services:
       - app-network
     depends_on:
       - eureka
+    volumes:
+      - ./okhttp-cache:/okhttp-cache
 
   kafka:
     image: confluentinc/cp-kafka:latest
