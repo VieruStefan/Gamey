@@ -1,5 +1,8 @@
 package org.dis.diffbotapi.service;
 
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,8 +14,12 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 import org.springframework.web.util.UriComponentsBuilder;
 import reactor.util.retry.Retry;
 
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class DiffbotServiceImpl implements DiffbotService {
@@ -21,12 +28,15 @@ public class DiffbotServiceImpl implements DiffbotService {
    private String apiToken;
    private final String basepath = "https://api.diffbot.com/v3/";
    private final KafkaService kafkaService;
-   private final WebClient client;
+   private static final OkHttpClient httpClient = new OkHttpClient.Builder()
+         .callTimeout(60, TimeUnit.SECONDS) // Total timeout for the call
+         .connectTimeout(60, TimeUnit.SECONDS) // Timeout for establishing a connection
+         .readTimeout(60, TimeUnit.SECONDS) // Timeout for reading the response
+         .build();
+   ;
 
-   public DiffbotServiceImpl(KafkaService kafkaService,
-                             WebClient webClient) {
+   public DiffbotServiceImpl(KafkaService kafkaService) {
       this.kafkaService = kafkaService;
-      this.client = webClient;
    }
 
    @Override
@@ -35,37 +45,22 @@ public class DiffbotServiceImpl implements DiffbotService {
          logger.error("Invalid api received. Only \"list\" API is supported.");
       }
       final String requestId = UUID.randomUUID().toString().substring(0, 8);
-      String uri = UriComponentsBuilder.fromUriString(basepath)
-            .path(api)
-            .queryParam("token", apiToken)
-            .queryParam("url", resource)
-            .build()
-            .encode()
-            .toUriString();
+      resource = URLEncoder.encode(resource, StandardCharsets.UTF_8);
 
-      logger.info("[{}] Starting request for api='{}', resource='{}'", requestId, api, resource);
+      StringBuilder builder = new StringBuilder(basepath);
+      builder.append(api).append('?').append("token=").append(apiToken).append('&').append("url=").append(resource);
+      String uri = builder.toString();
+      logger.info("[{}] Starting request for uri={}", requestId, uri);
 
-      Retry retrySpec = Retry.fixedDelay(Long.MAX_VALUE, Duration.ofSeconds(20))
-            .filter(throwable -> throwable instanceof WebClientResponseException &&
-                  ((WebClientResponseException) throwable).getStatusCode() == HttpStatus.TOO_MANY_REQUESTS)
-            .doBeforeRetry(retrySignal ->
-                  logger.warn("[{}] Received 429 Too Many Requests. Retrying in 20 seconds... (Attempt #{})",
-                        requestId, retrySignal.totalRetries() + 1));
-
-      this.client.get().uri(uri)
-            .accept(MediaType.APPLICATION_JSON)
-            .retrieve()
-            .bodyToMono(String.class)
-            .retryWhen(retrySpec)
-            .subscribe(
-                  response -> {
-                     kafkaService.sendMessage("api.responses", response);
-                     logger.info("[{}] Successfully processed and sent to api.response: '{}'", requestId, response);
-                  },
-                  error -> {
-                     logger.error("[{}] Failed to process request for api='{}' after all retries. Final error: {}",
-                           requestId, api, error.getMessage());
-                  }
-            );
+      synchronized (httpClient) {
+         Request request = new Request.Builder()
+               .url(uri)
+               .build();
+         try (Response response = httpClient.newCall(request).execute()) {
+            System.out.println(response.body().string());
+         } catch (IOException e) {
+            logger.warn("[{}] Error during request for uri={}", requestId, uri, e);
+         }
+      }
    }
 }

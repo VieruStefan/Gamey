@@ -6,6 +6,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+
 @Service
 public class DiffbotListener {
    private static final Logger logger = LoggerFactory.getLogger(DiffbotListener.class);
@@ -17,6 +20,7 @@ public class DiffbotListener {
 
    @KafkaListener(topics = "api.requests", groupId = "website-scraping")
    public void processApiRequest(String payload) {
+      payload = URLDecoder.decode(payload, StandardCharsets.UTF_8);
       processRequest("list", payload);
    }
 
