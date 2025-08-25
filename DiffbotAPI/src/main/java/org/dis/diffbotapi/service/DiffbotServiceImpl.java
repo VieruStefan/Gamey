@@ -1,25 +1,14 @@
 package org.dis.diffbotapi.service;
 
 import okhttp3.*;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
-import org.springframework.web.util.UriComponentsBuilder;
-import reactor.util.retry.Retry;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.time.Duration;
+import java.util.Objects;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 @Service
 public class DiffbotServiceImpl implements DiffbotService {
@@ -38,17 +27,10 @@ public class DiffbotServiceImpl implements DiffbotService {
 
    private String generateUrl(String path) {
       HttpUrl.Builder urlBuilder
-            = HttpUrl.parse(basepath + "list").newBuilder();
+            = Objects.requireNonNull(HttpUrl.parse(basepath + "list")).newBuilder();
       urlBuilder.addQueryParameter("token", this.apiToken);
       urlBuilder.addQueryParameter("url", path);
 
-      String result = URLEncoder.encode(path, StandardCharsets.UTF_8);
-
-      StringBuilder builder = new StringBuilder(basepath);
-      builder.append("list").append('?').append("token=").append(apiToken).append('&').append("url=").append(result);
-      logger.info("builder={}", builder);
-      logger.info("urlBuilder={}", urlBuilder);
-      logger.info("equals={}", urlBuilder.toString().contentEquals(builder));
       return urlBuilder.toString();
    }
 
