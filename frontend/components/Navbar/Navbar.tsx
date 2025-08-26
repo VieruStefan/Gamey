@@ -8,7 +8,7 @@ export default function Navbar() {
   return (
     <nav className={styles.navbar}>
       <div className={styles.navbarContainer}>
-        <Link href="/home" className={styles.logo}>
+        <Link href="/" className={styles.logo}>
           Gamey
         </Link>
 

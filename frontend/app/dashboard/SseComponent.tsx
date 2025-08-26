@@ -9,7 +9,7 @@ export function SseComponent() {
         let timeoutId;
         const sseUrl = `${process.env.NEXT_PUBLIC_MASTER_API_URL}/aggregator/sse/stream`;
         const eventSource = new EventSource(sseUrl);
-        fetch(`${process.env.NEXT_PUBLIC_REDUCER_SSE_URL}/gamedata/api/job/create-job`)
+        fetch(`/gamedata/api/job/create-job`)
             .then(() => console.log("Initial fetch successful."))
             .catch(e => console.error("Fetch failed: " + e))
 
