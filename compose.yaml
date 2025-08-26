@@ -7,13 +7,27 @@ services:
       - "3000:3000"
     networks:
       - app-network
-
-  eureka:
+  eureka-peer1:
     build:
       context: ./Eureka
       dockerfile: Dockerfile.dev
+    hostname: eureka-peer1
     ports:
-      - '8761:8761'
+      - "8761:8761"
+    environment:
+      - SPRING_PROFILES_ACTIVE=peer1
+    networks:
+      - app-network
+
+  eureka-peer2:
+    build:
+      context: ./Eureka
+      dockerfile: Dockerfile.dev
+    hostname: eureka-peer2
+    ports:
+      - "8762:8762"
+    environment:
+      - SPRING_PROFILES_ACTIVE=peer2
     networks:
       - app-network
 
@@ -25,8 +39,6 @@ services:
       - "8888:8888"
     networks:
       - app-network
-    depends_on:
-      - eureka
 
   gamedata:
     build:
@@ -34,8 +46,6 @@ services:
       dockerfile: Dockerfile.dev
     networks:
       - app-network
-    depends_on:
-      - eureka
 
   discovery-worker:
     build:
@@ -43,9 +53,6 @@ services:
       dockerfile: Dockerfile.dev
     networks:
       - app-network
-    depends_on:
-      - eureka
-      - diffbot-api
 
   detail-worker:
     build:
@@ -53,8 +60,6 @@ services:
       dockerfile: Dockerfile.dev
     networks:
       - app-network
-    depends_on:
-      - eureka
 
   diffbot-api:
     build:
@@ -62,8 +67,6 @@ services:
       dockerfile: Dockerfile.dev
     networks:
       - app-network
-    depends_on:
-      - eureka
     volumes:
       - ./okhttp-cache:/okhttp-cache
 
