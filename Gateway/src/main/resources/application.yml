@@ -64,3 +64,11 @@ eureka:
     service-url:
       defaultZone: http://eureka-peer1:8761/eureka/,http://eureka-peer2:8762/eureka/
     enabled: true
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  metrics:
+    tags:
+      application: ${spring.application.name}

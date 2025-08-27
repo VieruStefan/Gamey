@@ -25,3 +25,11 @@ eureka:
 logging:
   level:
     org.dis.worker.detail.*: debug
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  metrics:
+    tags:
+      application: ${spring.application.name}
