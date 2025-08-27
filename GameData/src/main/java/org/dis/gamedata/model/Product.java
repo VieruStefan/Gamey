@@ -1,5 +1,6 @@
 package org.dis.gamedata.model;
 
+import com.mongodb.lang.Nullable;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -13,4 +14,6 @@ public class Product {
    private String title;
    private String url;
    private String platform;
+   @Nullable
+   private String image;
 }

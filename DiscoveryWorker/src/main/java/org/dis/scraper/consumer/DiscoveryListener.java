@@ -2,6 +2,7 @@ package org.dis.scraper.consumer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.dis.scraper.dto.DiffbotResponseDto;
+import org.dis.scraper.dto.ListObjectDto;
 import org.dis.scraper.dto.ProductDTO;
 import org.dis.scraper.service.KafkaService;
 import org.slf4j.Logger;
@@ -36,9 +37,17 @@ public class DiscoveryListener {
       logger.debug("Processing response: {}.", sites);
       try {
          DiffbotResponseDto response = objectMapper.readValue(sites, DiffbotResponseDto.class);
+         logger.debug("Received Diffbot items: {}", response.getObjects().getFirst().getItems());
+         logger.debug("Size of items: {}", response.getObjects().getFirst().getItems().size());
+         logger.debug("Size of products: {}", response.getObjects().getFirst().getProducts().size());
          List<ProductDTO> products = response.getObjects().getFirst().getProducts();
+         List<ListObjectDto.Item> items = response.getObjects().getFirst().getItems();
          logger.debug("Successfully deserialized {} products.", products.size());
          for (ProductDTO dto : products) {
+            int i = products.indexOf(dto);
+            if (items != null && !items.isEmpty() && i < items.size()) {
+               dto.setImage(URLDecoder.decode(items.get(i).getImage(), StandardCharsets.UTF_8));
+            }
             logger.info("Processing product {} with API Details", dto.getTitle());
             String productJson = objectMapper.writeValueAsString(dto);
             kafkaService.sendMessage("gamedata.products", productJson);

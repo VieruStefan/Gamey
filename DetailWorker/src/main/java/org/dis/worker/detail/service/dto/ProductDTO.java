@@ -12,4 +12,5 @@ public class ProductDTO {
    private String url;
    private String platform;
    private String gameId;
+   private String image;
 }

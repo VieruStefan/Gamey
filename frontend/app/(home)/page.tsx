@@ -2,6 +2,7 @@ import {Gamepad2, Star} from "lucide-react";
 import styles from "./Home.module.css";
 import Link from "next/link";
 import {getProducts} from "@/_lib/data";
+import Image from "next/image";
 
 export default async function HomePage() {
     const products = await getProducts();
@@ -22,7 +23,12 @@ export default async function HomePage() {
                         {products.map((product) => (
                             <Link key={product.id} href={`/${product.id}`} className={styles.gameCard}>
                                 <div className={styles.gameImageWrapper}>
-                                    {/*<Image src={'/placeholder.png'} alt={product.title}/>*/}
+                                    <Image src={product.image}
+                                           alt={product.title}
+                                           fill
+                                           style={{ objectFit: 'cover' }}
+                                           className={styles.gameImage}
+                                    />
                                     <div className={styles.gradientOverlay}/>
                                 </div>
                                 <div className={styles.gameContent}>

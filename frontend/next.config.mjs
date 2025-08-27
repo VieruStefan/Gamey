@@ -5,7 +5,53 @@ const nextConfig = {
     env: {
         NEXT_PUBLIC_MASTER_API_URL: process.env.NEXT_PUBLIC_MASTER_API_URL,
         NEXT_PUBLIC_REDUCER_SSE_URL: process.env.NEXT_PUBLIC_REDUCER_SSE_URL,
-    }
+    },
+    images: {
+        remotePatterns: [
+            {
+                protocol: 'https',
+                hostname: 'www.lumea-jocurilor.ro',
+                port: '',
+                pathname: '/wareImages/**',
+            },
+            {
+                protocol: 'https',
+                hostname: 'www.jocurinoi.ro',
+                port: '',
+                pathname: '/image/**',
+            },
+            {
+                protocol: 'https',
+                hostname: 'b.scdn.gr',
+                port: '',
+                pathname: '/images/**',
+            },
+            {
+                protocol: 'https',
+                hostname: '*.scdn.gr',
+                port: '',
+                pathname: '/images/**',
+            },
+            {
+                protocol: 'https',
+                hostname: 'gomagcdn.ro',
+                port: '',
+                pathname: '/**/mobile-zone.ro/**',
+            },
+            {
+                protocol: 'https',
+                hostname: '*.cel.ro',
+                port: '',
+                pathname: '/images/**',
+            },
+            {
+                protocol: 'https',
+                hostname: 'www.buy2play.ro',
+                port: '',
+                pathname: '/**/uploads/**',
+            },
+        ],
+    },
 };
 
 export default nextConfig;

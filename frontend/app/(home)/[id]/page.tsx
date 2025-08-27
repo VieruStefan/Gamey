@@ -3,6 +3,7 @@ import {ArrowLeft, ExternalLink, Star} from "lucide-react";
 import Link from "next/link";
 import Navbar from "@/components/Navbar/Navbar";
 import {getProduct} from "@/_lib/data";
+import Image from "next/image";
 
 export default async function GamePage(
     {
@@ -26,7 +27,13 @@ export default async function GamePage(
                     </Link>
 
                     <div className={styles.grid}>
-                        {/*<Image src={"/placeholder.png"} alt={game.title} className={styles.gameImage} />*/}
+                        <Image src={game.image}
+                               alt={`image of ${game.title}`}
+                               width={640}
+                               height={360}
+                               style={{ objectFit: 'cover' }}
+                               className={styles.gameImage}
+                        />
 
                         <div className={styles.gameInfo}>
                             <h1 className={styles.gameTitle}>{game.title}</h1>

@@ -14,6 +14,12 @@ public class ListObjectDto {
    private String resolvedPageUrl;
    private String nextPage;
    private String title;
-   private List<Object> items;
+   private List<Item> items;
    private List<ProductDTO> products;
+
+   @Data
+   @JsonIgnoreProperties(ignoreUnknown = true)
+   public static class Item {
+      private String image;
+   }
 }

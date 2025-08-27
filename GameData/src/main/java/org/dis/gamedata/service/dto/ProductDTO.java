@@ -11,4 +11,5 @@ public class ProductDTO {
    private String title;
    private String url;
    private String platform;
+   private String image;
 }
