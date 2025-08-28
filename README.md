@@ -1,4 +1,6 @@
 # To run the app
+
+Create the network: `sudo docker network create app-network`
 #### Dev
 ```
 sudo docker compose -f compose.dev.yaml build 
@@ -34,7 +36,7 @@ sudo docker build -t next-app-dev \
 sudo docker run -d \
     --name next-app-dev \
     -p 3000:3000 \
-    -e NEXT_PUBLIC_GATEWAY_URL=http://localhost:8888 \
+    -e NEXT_PUBLIC_GATEWAY_URL=http://api-gateway:8888 \
     --network app-network \
     --restart always 
     next-app-dev
