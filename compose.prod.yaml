@@ -1,0 +1,163 @@
+services:
+  next-app:
+    container_name: next-app
+    build:
+      context: ./frontend
+      dockerfile: prod.Dockerfile
+    environment:
+      NEXT_PUBLIC_GATEWAY_URL: http://api-gateway:8888
+    env_file:
+      - .env.production.local
+    volumes:
+      - ./next-app/src:/app/src
+      - ./next-app/public:/app/public
+    restart: always
+    ports:
+      - "3000:3000"
+    networks:
+      - app-network
+
+  eureka-peer1:
+    build:
+      context: ./Eureka
+      dockerfile: Dockerfile.prod
+    hostname: eureka-peer1
+    ports:
+      - "8761:8761"
+    environment:
+      - SPRING_PROFILES_ACTIVE=peer1
+    networks:
+      - app-network
+
+  eureka-peer2:
+    build:
+      context: ./Eureka
+      dockerfile: Dockerfile.prod
+    hostname: eureka-peer2
+    ports:
+      - "8762:8762"
+    environment:
+      - SPRING_PROFILES_ACTIVE=peer2
+    networks:
+      - app-network
+
+  api-gateway:
+    build:
+      context: ./Gateway
+      dockerfile: Dockerfile.prod
+    ports:
+      - "8888:8888"
+    networks:
+      - app-network
+
+  gamedata:
+    build:
+      context: ./GameData
+      dockerfile: Dockerfile.prod
+    ports:
+      - "8090:8090"
+    networks:
+      - app-network
+
+  discovery-worker:
+    build:
+      context: ./DiscoveryWorker
+      dockerfile: Dockerfile.prod
+    ports:
+      - "8091:8091"
+    networks:
+      - app-network
+
+  detail-worker:
+    build:
+      context: ./DetailWorker
+      dockerfile: Dockerfile.prod
+    ports:
+      - "8092:8092"
+    networks:
+      - app-network
+
+  diffbot-api:
+    build:
+      context: ./DiffbotAPI
+      dockerfile: Dockerfile.prod
+    ports:
+      - "8095:8095"
+    networks:
+      - app-network
+    volumes:
+      - ./okhttp-cache:/okhttp-cache
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    networks:
+      - app-network
+    environment:
+      CLUSTER_ID: 'IdILjb8pSgadtg2Huzaz0g'
+      KAFKA_PROCESS_ROLES: 'broker,controller'
+      KAFKA_NODE_ID: 1
+      KAFKA_REST_CONSUMER_MAX_POLL_INTERVAL_MS: 464000
+      KAFKA_LISTENERS: 'PLAINTEXT://kafka:9092,CONTROLLER://kafka:9093'
+      KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://kafka:9092'
+      KAFKA_INTER_BROKER_LISTENER_NAME: 'PLAINTEXT'
+      KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
+      KAFKA_CONTROLLER_QUORUM_VOTERS: '1@kafka:9093'
+
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+
+  mongodb:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    networks:
+      - app-network
+    volumes:
+      - mongodb_data:/data/db
+      - ./mongo-init:/docker-entrypoint-initdb.d
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+
+  mongodb-exporter:
+    image: percona/mongodb_exporter:0.47.0
+    ports:
+      - "9216:9216"
+    networks:
+      - app-network
+    command: --mongodb.uri=“mongodb://mongodb:27017” --collect-all --discovering-mode
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    restart: unless-stopped
+    ports:
+      - "9090:9090"
+    networks:
+      - app-network
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+
+  grafana:
+    image: grafana/grafana-enterprise
+    container_name: grafana
+    restart: unless-stopped
+    environment:
+      - TERM=linux
+      - GF_PLUGINS_PREINSTALL=grafana-clock-panel,grafana-polystat-panel,hamedkarbasi93-kafka-datasource
+    ports:
+      - '3010:3000'
+    networks:
+      - app-network
+    volumes:
+      - 'grafana_storage:/var/lib/grafana'
+
+networks:
+  app-network:
+    external: true
+
+volumes:
+  mongodb_data:
+  grafana_storage: { }

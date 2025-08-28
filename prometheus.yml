@@ -7,9 +7,13 @@ scrape_configs:
     static_configs:
       - targets:
           - 'api-gateway:8888'
-          - 'gamedata:8080'
-          - 'discovery-worker:8080'
-          - 'detail-worker:8080'
-          - 'diffbot-api:8080'
+          - 'gamedata:8090'
+          - 'discovery-worker:8091'
+          - 'detail-worker:8092'
+          - 'diffbot-api:8095'
           - 'eureka-peer1:8761'
           - 'eureka-peer2:8762'
+  - job_name: 'mongodb'
+    static_configs:
+      - targets:
+          - 'mongodb-exporter:9216'

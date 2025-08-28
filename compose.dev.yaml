@@ -1,12 +1,22 @@
 services:
-  frontend:
+  next-app:
+    container_name: next-app
     build:
       context: ./frontend
-      dockerfile: Dockerfile.prod
+      dockerfile: dev.Dockerfile
+    environment:
+      NEXT_PUBLIC_GATEWAY_URL: http://localhost:8888
+    env_file:
+      - ./frontend/.env.local
+    volumes:
+      - ./frontend:/app
+      - ./frontend/public:/public
+    restart: always
     ports:
       - "3000:3000"
     networks:
       - app-network
+
   eureka-peer1:
     build:
       context: ./Eureka
@@ -111,6 +121,14 @@ services:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: root
 
+  mongodb-exporter:
+    image: percona/mongodb_exporter:0.47.0
+    ports:
+      - "9216:9216"
+    networks:
+      - app-network
+    command: --mongodb.uri=“mongodb://mongodb:27017” --collect-all --discovering-mode
+
   prometheus:
     image: prom/prometheus
     container_name: prometheus
@@ -138,7 +156,7 @@ services:
 
 networks:
   app-network:
-    driver: bridge
+    external: true
 
 volumes:
   mongodb_data:
