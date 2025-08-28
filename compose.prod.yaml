@@ -1,24 +1,4 @@
 services:
-  next-app:
-    container_name: next-app
-    build:
-      context: ./frontend
-      dockerfile: prod.Dockerfile
-      args:
-        NEXT_PUBLIC_GATEWAY_URL: http://api-gateway:8888
-    environment:
-      NEXT_PUBLIC_GATEWAY_URL: http://api-gateway:8888
-    env_file:
-      - .env.production.local
-    volumes:
-      - ./next-app/src:/app/src
-      - ./next-app/public:/app/public
-    restart: always
-    ports:
-      - "3000:3000"
-    networks:
-      - app-network
-
   eureka-peer1:
     build:
       context: ./Eureka
