@@ -1,7 +1,16 @@
 # To run the app
-* `docker compose build --no-cache`
-* `docker compose up`
-* `docker compose down`
+#### Dev
+```
+sudo docker compose -f compose.dev.yaml build 
+sudo docker compose -f compose.dev.yaml up -d
+sudo docker compose -f compose.dev.yaml down
+```
+#### Production
+```
+sudo docker compose -f compose.prod.yaml build
+sudo docker compose -f compose.prod.yaml up -d
+sudo docker compose -f compose.prod.yaml down
+```
 
 The kafka server is open for Docker containers on `kafka:9092`.\
 The eureka server is open on `8761` and `8762`.\
