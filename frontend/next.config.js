@@ -7,6 +7,12 @@ const nextConfig = {
     env: {
         NEXT_PUBLIC_GATEWAY_URL: process.env.NEXT_PUBLIC_GATEWAY_URL,
     },
+    logging: {
+        fetches: {
+            fullUrl: true,
+            hmrRefreshes: true,
+        },
+    },
     images: {
         remotePatterns: [
             {

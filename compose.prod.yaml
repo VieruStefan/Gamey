@@ -4,6 +4,8 @@ services:
     build:
       context: ./frontend
       dockerfile: prod.Dockerfile
+      args:
+        NEXT_PUBLIC_GATEWAY_URL: http://api-gateway:8888
     environment:
       NEXT_PUBLIC_GATEWAY_URL: http://api-gateway:8888
     env_file:
