@@ -3,6 +3,7 @@ import { Suspense } from "react"
 import Loading from "./loading"
 import Products from "@/app/components/Products/Products"
 import Sidebar from "@/app/components/Sidebar/Sidebar"
+import styles from "@/app/components/Home.module.css"
 
 export default async function HomePage({
   searchParams,
@@ -23,11 +24,11 @@ export default async function HomePage({
   const products = getProducts()
 
   return (
-    <div className="bg-[rgba(15,23,42,1)]" style={{ display: "flex" }}>
+    <div className={styles.pageContainer}>
       <Suspense fallback={<div className="w-64 bg-slate-800 animate-pulse" />}>
         <Sidebar initialPlatform={platform} initialPriceRange={priceRange} />
       </Suspense>
-      <div style={{ flex: 1, padding: "1rem" }}>
+      <div className={styles.mainContent}>
         <Suspense fallback={<Loading />}>
           <Products
             products={products}

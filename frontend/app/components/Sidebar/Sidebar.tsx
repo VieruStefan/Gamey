@@ -81,19 +81,15 @@ export default function Sidebar({ initialPlatform, initialPriceRange }: SidebarP
 
   return (
     <aside className={styles.sidebar}>
-      <div className={styles.header} style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <div className={styles.title} style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+      <div className={`${styles.header} ${styles.headerContainer}`}>
+        <div className={styles.title}>
           <div className={styles.iconWrapper}>
             <Filter className={styles.icon} />
           </div>
           Filter Games
         </div>
 
-        <button
-          className={styles.resetButton}
-          onClick={resetFilters}
-          style={{ display: "flex", alignItems: "center", gap: "0.3rem" }}
-        >
+        <button className={styles.resetButton} onClick={resetFilters}>
           <RefreshCcw className={styles.icon} />
         </button>
       </div>
@@ -110,47 +106,39 @@ export default function Sidebar({ initialPlatform, initialPriceRange }: SidebarP
 
         <div className={styles.filterGroup}>
           <label className={styles.label}>Price Range</label>
-          <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.875rem", color: "#64748b" }}>
+          <div className={styles.priceRangeContainer}>
+            <div className={styles.priceRangeLabels}>
               <span>Min: {minSliderValue} RON</span>
               <span>Max: {maxSliderValue} RON</span>
             </div>
 
-            <div className="text-[rgba(203,213,225,1)]" style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                <span style={{ fontSize: "0.75rem", minWidth: "30px" }}>Min</span>
+            <div className={styles.slidersContainer}>
+              <div className={styles.sliderRow}>
+                <span className={styles.sliderLabel}>Min</span>
                 <input
                   type="range"
                   min={0}
                   max={700}
                   value={minSliderValue}
                   onChange={handleMinSliderChange}
+                  className={styles.priceSlider}
                   style={{
-                    flex: 1,
-                    height: "6px",
-                    borderRadius: "5px",
                     background: `linear-gradient(to right, #4f46e5 0%, #4f46e5 ${(minSliderValue / 700) * 100}%, #334155 ${(minSliderValue / 700) * 100}%, #334155 100%)`,
-                    appearance: "none",
-                    outline: "none",
                   }}
                 />
               </div>
 
-              <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                <span style={{ fontSize: "0.75rem", minWidth: "30px" }}>Max</span>
+              <div className={styles.sliderRow}>
+                <span className={styles.sliderLabel}>Max</span>
                 <input
                   type="range"
                   min={0}
                   max={700}
                   value={maxSliderValue}
                   onChange={handleMaxSliderChange}
+                  className={styles.priceSlider}
                   style={{
-                    flex: 1,
-                    height: "6px",
-                    borderRadius: "5px",
                     background: `linear-gradient(to right, #334155 0%, #334155 ${(maxSliderValue / 700) * 100}%, #4f46e5 ${(maxSliderValue / 700) * 100}%, #4f46e5 100%)`,
-                    appearance: "none",
-                    outline: "none",
                   }}
                 />
               </div>

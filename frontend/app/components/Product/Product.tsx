@@ -29,8 +29,7 @@ export default function Product({ product }: { product: Promise<ProductTypes> })
               alt={`image of ${game.title}`}
               width={640}
               height={360}
-              style={{ objectFit: "cover" }}
-              className={styles.gameImage}
+              className={styles.gameImageCover}
               onError={() => setImageError(true)}
               unoptimized={false}
             />

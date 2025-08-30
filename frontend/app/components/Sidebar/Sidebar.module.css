@@ -7,6 +7,12 @@
   border-radius: 0.5rem;
 }
 
+.headerContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .header {
   margin-bottom: 1rem;
 }
@@ -18,11 +24,11 @@
   color: white;
   font-size: 1.125rem;
   font-weight: 600;
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: "Space Grotesk", sans-serif;
 }
 
 .iconWrapper {
-  background-color: rgba(249,115,22,0.2);
+  background-color: rgba(249, 115, 22, 0.2);
   padding: 0.5rem;
   border-radius: 0.5rem;
   display: flex;
@@ -36,6 +42,23 @@
   height: 1.25rem;
 }
 
+.resetButton {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 0.25rem;
+  transition: color 0.2s;
+}
+
+.resetButton:hover {
+  color: #f97316;
+}
+
 .content {
   display: flex;
   flex-direction: column;
@@ -46,6 +69,64 @@
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
+}
+
+.priceRangeContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.priceRangeLabels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.875rem;
+  color: #64748b;
+}
+
+.slidersContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  color: rgba(203, 213, 225, 1);
+}
+
+.sliderRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.sliderLabel {
+  font-size: 0.75rem;
+  min-width: 30px;
+}
+
+.priceSlider {
+  flex: 1;
+  height: 6px;
+  border-radius: 5px;
+  appearance: none;
+  outline: none;
+  cursor: pointer;
+}
+
+.priceSlider::-webkit-slider-thumb {
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #4f46e5;
+  cursor: pointer;
+}
+
+.priceSlider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #4f46e5;
+  cursor: pointer;
+  border: none;
 }
 
 .label {
@@ -72,7 +153,7 @@
 }
 
 .badge {
-  background-color: rgba(249,115,22,0.2);
+  background-color: rgba(249, 115, 22, 0.2);
   color: #f97316;
   padding: 0.25rem 0.5rem;
   border-radius: 0.375rem;

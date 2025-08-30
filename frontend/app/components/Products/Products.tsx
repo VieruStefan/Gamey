@@ -76,7 +76,6 @@ export default function Products({
                     alt={product.title}
                     width="205"
                     height="273"
-                    style={{ objectFit: "cover" }}
                     priority={true}
                     className={styles.gameImage}
                     onError={() => handleImageError(product.id)}

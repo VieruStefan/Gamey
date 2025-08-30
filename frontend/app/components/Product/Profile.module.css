@@ -11,20 +11,20 @@
 }
 
 .backButton {
-  display: inline-flex;    
-  align-items: center;      
-  gap: 0.5rem;             
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
   padding: 0.5rem 1rem;
   background-color: #0f172a;
   color: #ffffff;
   border-radius: 0.5rem;
   text-decoration: none;
   font-weight: bold;
-  margin-bottom:10px;
+  margin-bottom: 10px;
 }
 
 .backButton:hover {
- color:#f97316;
+  color: #f97316;
 }
 
 .grid {
@@ -34,6 +34,13 @@
 }
 
 .gameImage {
+  width: 200px;
+  height: auto;
+  border-radius: 0.5rem;
+  object-fit: cover;
+}
+
+.gameImageCover {
   width: 200px;
   height: auto;
   border-radius: 0.5rem;
@@ -137,6 +144,7 @@
 .visitButton:hover {
   background-color: #ea580c;
 }
+
 .reviewsSection {
   margin-top: 2rem;
   padding-top: 1rem;
@@ -158,19 +166,20 @@
 
 .commentCard {
   padding: 0.75rem 1rem;
-  border-bottom: 1px solid #555; 
+  border-bottom: 1px solid #555;
 }
 
 .commentUsername {
   font-weight: bold;
-  color: #f97316; 
+  color: #f97316;
   margin-bottom: 0.25rem;
 }
 
 .commentText {
   font-size: 0.95rem;
-  color: #ffffff; 
+  color: #ffffff;
 }
+
 @media (max-width: 768px) {
   .pageWrapper {
     padding: 1rem;
