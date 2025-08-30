@@ -1,22 +1,24 @@
 import type { ProductTypes } from "@/app/_types/product.types"
 
 const mockProducts: ProductTypes[] = [
-  {
-    id: "1",
-    name: "Sample Product 1",
-    price: 80.99,
-    description: "This is a sample product for development",
-    image: "/generic-product-display.png",
-    category: "Electronics",
-  },
-  {
-    id: "2",
-    name: "Sample Product 2",
-    price: 99.99,
-    description: "Another sample product for development",
-    image: "/sample-product-2.png",
-    category: "Accessories",
-  },
+    {
+        id: "1",
+        title: "Sample Product 1",
+        price: "80.99",
+        image: "/generic-product-display.png",
+        platform: "Electronics",
+        url: "",
+        gameId: ""
+    },
+    {
+        id: "2",
+        title: "Sample Product 2",
+        price: "99.99",
+        image: "/sample-product-2.png",
+        platform: "Accessories",
+        url: "",
+        gameId: ""
+    },
 ]
 
 export const getProducts = async (): Promise<ProductTypes[]> => {
