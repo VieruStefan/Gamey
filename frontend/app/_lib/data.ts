@@ -4,7 +4,7 @@ const mockProducts: ProductTypes[] = [
   {
     id: "1",
     name: "Sample Product 1",
-    price: 29.99,
+    price: 80.99,
     description: "This is a sample product for development",
     image: "/generic-product-display.png",
     category: "Electronics",
@@ -12,7 +12,7 @@ const mockProducts: ProductTypes[] = [
   {
     id: "2",
     name: "Sample Product 2",
-    price: 49.99,
+    price: 99.99,
     description: "Another sample product for development",
     image: "/sample-product-2.png",
     category: "Accessories",

@@ -117,8 +117,7 @@
 
 @layer base {
   * {
-    border: 1px solid var(--color-border);
-    outline: 2px solid rgb(from var(--color-ring) r g b / 0.5);
+
   }
   body {
     background-color: var(--color-background);
