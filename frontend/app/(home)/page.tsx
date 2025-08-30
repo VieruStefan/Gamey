@@ -24,7 +24,9 @@ export default async function HomePage({
 
   return (
     <div className="bg-[rgba(15,23,42,1)]" style={{ display: "flex" }}>
-      <Sidebar initialPlatform={platform} initialPriceRange={priceRange} />
+      <Suspense fallback={<div className="w-64 bg-slate-800 animate-pulse" />}>
+        <Sidebar initialPlatform={platform} initialPriceRange={priceRange} />
+      </Suspense>
       <div style={{ flex: 1, padding: "1rem" }}>
         <Suspense fallback={<Loading />}>
           <Products
