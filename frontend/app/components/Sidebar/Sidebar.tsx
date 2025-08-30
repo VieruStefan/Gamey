@@ -116,7 +116,7 @@ export default function Sidebar({ initialPlatform, initialPriceRange }: SidebarP
               <span>Max: {maxSliderValue} RON</span>
             </div>
 
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+            <div className="text-[rgba(203,213,225,1)]" style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
                 <span style={{ fontSize: "0.75rem", minWidth: "30px" }}>Min</span>
                 <input
