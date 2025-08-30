@@ -54,10 +54,10 @@ export default function Product({ product }: { product: Promise<ProductTypes> })
               </div>
               <div className={styles.rating}>
                 {[...Array(5)].map((_, i) => (
-                  <Star key={i} className={i < 0 ? styles.starFilled : styles.starEmpty} />
+                  <Star key={i} className={i < game.rating ? styles.starFilled : styles.starEmpty} />
                 ))}
-                <span className={styles.ratingValue}>-</span>
-                <span className={styles.reviews}>(No reviews)</span>
+                <span className={styles.ratingValue}>{game.rating}</span>
+                <span className={styles.reviews}>({game.reviews} reviews)</span>
               </div>
             </div>
 

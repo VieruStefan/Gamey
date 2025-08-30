@@ -104,8 +104,8 @@ export default function Products({
                   <div className={styles.stats}>
                     <div className={styles.rating}>
                       <Star />
-                      <span>TODO</span>
-                      <span className={styles.ratingSmall}>(TODO)</span>
+                      <span>{product.rating}</span>
+                      <span className={styles.ratingSmall}>({product.ratingCount})</span>
                     </div>
                     <div className={styles.price}>
                       <p className={styles.priceValue}>{product.price} Lei</p>
