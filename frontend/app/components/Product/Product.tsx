@@ -10,6 +10,23 @@ export default function Product({ product }: { product: Promise<ProductTypes> })
   const game = use(product)
   const [imageError, setImageError] = useState(false)
 
+  const isValidUrl = (url: string | undefined | null): boolean => {
+    if (!url || url === "undefined" || url === "null") return false
+    try {
+      new URL(url)
+      return true
+    } catch {
+      return false
+    }
+  }
+
+  const getImageSrc = () => {
+    if (imageError || !isValidUrl(game.image)) {
+      return "/game-placeholder.png"
+    }
+    return game.image
+  }
+
   return (
     <>
       <div className={styles.pageWrapper}>
@@ -21,17 +38,13 @@ export default function Product({ product }: { product: Promise<ProductTypes> })
 
           <div className={styles.grid}>
             <Image
-              src={
-                imageError
-                  ? "/placeholder.svg?height=360&width=640&query=game placeholder"
-                  : game.image || "/placeholder.svg?height=360&width=640&query=game placeholder"
-              }
+              src={getImageSrc() || "/placeholder.svg"}
               alt={`image of ${game.title}`}
               width={640}
               height={360}
               className={styles.gameImageCover}
               onError={() => setImageError(true)}
-              unoptimized={false}
+              unoptimized={true}
             />
 
             <div className={styles.gameInfo}>
@@ -51,12 +64,16 @@ export default function Product({ product }: { product: Promise<ProductTypes> })
             <div className={styles.sideSection}>
               <div className={styles.priceCard}>
                 <div>
-                  <p className={styles.priceStore}>{new URL(game.url).hostname.replace("www.", "")}</p>
+                  <p className={styles.priceStore}>
+                    {isValidUrl(game.url) ? new URL(game.url).hostname.replace("www.", "") : "Unknown Store"}
+                  </p>
                   <p className={styles.priceValue}>{game.price} RON</p>
                 </div>
-                <a href={game.url} className={styles.visitButton} target="_blank" rel="noopener noreferrer">
-                  Vizitează <ExternalLink className="h-4 w-4" />
-                </a>
+                {isValidUrl(game.url) && (
+                  <a href={game.url} className={styles.visitButton} target="_blank" rel="noopener noreferrer">
+                    Vizitează <ExternalLink className="h-4 w-4" />
+                  </a>
+                )}
               </div>
             </div>
           </div>

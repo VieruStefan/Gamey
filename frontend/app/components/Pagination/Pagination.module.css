@@ -21,6 +21,11 @@
   @apply hover:text-foreground;
 }
 
+/* Added missing pageNumbers container styles */
+.pageNumbers {
+  @apply flex items-center gap-1 mx-2;
+}
+
 .pageButton {
   @apply px-3 py-2 text-sm font-medium rounded-md border transition-all duration-200;
   @apply border-border bg-background text-foreground;
@@ -44,5 +49,10 @@
   .button,
   .pageButton {
     @apply px-2 py-1 text-xs;
+  }
+
+  /* Added responsive styles for pageNumbers */
+  .pageNumbers {
+    @apply gap-0.5 mx-1;
   }
 }

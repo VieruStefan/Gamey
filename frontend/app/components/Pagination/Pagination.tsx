@@ -81,7 +81,7 @@ export default function Pagination({ currentPage, totalPages, totalItems, itemsP
         </button>
 
         {/* Page numbers */}
-        <div className="flex items-center gap-1 mx-2">
+        <div className={styles.pageNumbers}>
           {getPageNumbers().map((page, index) => (
             <div key={index}>
               {page === "..." ? (

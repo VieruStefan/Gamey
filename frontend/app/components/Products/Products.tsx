@@ -25,6 +25,23 @@ export default function Products({
   const allProducts = use(products)
   const [failedImages, setFailedImages] = useState<Set<string>>(new Set())
 
+  const isValidUrl = (url: string | undefined | null): boolean => {
+    if (!url || url === "undefined" || url === "null") return false
+    try {
+      new URL(url)
+      return true
+    } catch {
+      return false
+    }
+  }
+
+  const getImageSrc = (product: ProductTypes) => {
+    if (failedImages.has(product.id) || !isValidUrl(product.image)) {
+      return "/game-placeholder.png"
+    }
+    return product.image
+  }
+
   const filteredProducts = useMemo(() => {
     return allProducts.filter((product) => {
       // Search filter
@@ -68,18 +85,14 @@ export default function Products({
               <Link key={product.id} href={`/${product.id}`} className={styles.gameCard}>
                 <div className={styles.gameImageWrapper}>
                   <Image
-                    src={
-                      failedImages.has(product.id)
-                        ? "/placeholder.svg?height=273&width=205&query=game cover"
-                        : product.image || "/placeholder.svg?height=273&width=205&query=game cover"
-                    }
+                    src={getImageSrc(product) || "/placeholder.svg"}
                     alt={product.title}
                     width="205"
                     height="273"
                     priority={true}
                     className={styles.gameImage}
                     onError={() => handleImageError(product.id)}
-                    unoptimized={false}
+                    unoptimized={true}
                   />
                   <div className={styles.gradientOverlay} />
                 </div>
