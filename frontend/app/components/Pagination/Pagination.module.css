@@ -1,0 +1,48 @@
+.pagination {
+  @apply flex flex-col items-center gap-6 mt-8 px-4;
+}
+
+.info {
+  @apply text-sm text-muted-foreground text-center;
+}
+
+.controls {
+  @apply flex items-center justify-center gap-2 flex-wrap;
+}
+
+.button {
+  @apply px-3 py-2 text-sm font-medium rounded-md border transition-all duration-200;
+  @apply border-border bg-background text-foreground;
+  @apply hover:bg-accent hover:text-accent-foreground;
+  @apply disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-background;
+}
+
+.button:disabled {
+  @apply hover:text-foreground;
+}
+
+.pageButton {
+  @apply px-3 py-2 text-sm font-medium rounded-md border transition-all duration-200;
+  @apply border-border bg-background text-foreground;
+  @apply hover:bg-accent hover:text-accent-foreground;
+}
+
+.pageButton.active {
+  @apply bg-primary text-primary-foreground border-primary;
+  @apply hover:bg-primary hover:text-primary-foreground;
+}
+
+.ellipsis {
+  @apply px-3 py-2 text-sm text-muted-foreground;
+}
+
+@media (max-width: 640px) {
+  .controls {
+    @apply gap-1;
+  }
+
+  .button,
+  .pageButton {
+    @apply px-2 py-1 text-xs;
+  }
+}

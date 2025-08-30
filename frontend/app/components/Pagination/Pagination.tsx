@@ -1,6 +1,7 @@
 "use client"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { useRouter, useSearchParams } from "next/navigation"
+import styles from "./Pagination.module.css"
 
 interface PaginationProps {
   currentPage: number
@@ -65,36 +66,30 @@ export default function Pagination({ currentPage, totalPages, totalItems, itemsP
   if (totalPages <= 1) return null
 
   return (
-    <div className="flex flex-col items-center gap-4 mt-8 mb-4">
+    <div className={styles.pagination}>
       {/* Results info */}
-      <div className="text-sm text-gray-400">
+      <div className={styles.info}>
         Showing {startItem}-{endItem} of {totalItems} results
       </div>
 
       {/* Pagination controls */}
-      <div className="flex items-center gap-2">
+      <div className={styles.controls}>
         {/* Previous button */}
-        <button
-          onClick={() => updatePage(currentPage - 1)}
-          disabled={currentPage === 1}
-          className="flex items-center gap-1 px-3 py-2 text-sm bg-slate-800 text-white rounded-lg hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-        >
+        <button onClick={() => updatePage(currentPage - 1)} disabled={currentPage === 1} className={styles.button}>
           <ChevronLeft size={16} />
           Previous
         </button>
 
         {/* Page numbers */}
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1 mx-2">
           {getPageNumbers().map((page, index) => (
             <div key={index}>
               {page === "..." ? (
-                <span className="px-3 py-2 text-gray-400">...</span>
+                <span className={styles.ellipsis}>...</span>
               ) : (
                 <button
                   onClick={() => updatePage(page as number)}
-                  className={`px-3 py-2 text-sm rounded-lg transition-colors ${
-                    currentPage === page ? "bg-blue-600 text-white" : "bg-slate-800 text-white hover:bg-slate-700"
-                  }`}
+                  className={`${styles.pageButton} ${currentPage === page ? styles.active : ""}`}
                 >
                   {page}
                 </button>
@@ -107,7 +102,7 @@ export default function Pagination({ currentPage, totalPages, totalItems, itemsP
         <button
           onClick={() => updatePage(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className="flex items-center gap-1 px-3 py-2 text-sm bg-slate-800 text-white rounded-lg hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className={styles.button}
         >
           Next
           <ChevronRight size={16} />

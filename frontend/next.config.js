@@ -20,6 +20,14 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
+        hostname: "**",
+      },
+      {
+        protocol: "http",
+        hostname: "**",
+      },
+      {
+        protocol: "https",
         hostname: "www.lumea-jocurilor.ro",
         port: "",
         pathname: "/wareImages/**",
@@ -61,7 +69,9 @@ const nextConfig = {
         pathname: "/**/uploads/**",
       },
     ],
-    unoptimized: true,
+    dangerouslyAllowSVG: true,
+    contentDispositionType: "attachment",
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
 }
 

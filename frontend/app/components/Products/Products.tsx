@@ -4,7 +4,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { Gamepad2, Star } from "lucide-react"
 import type { ProductTypes } from "@/app/_types/product.types"
-import { use, useMemo } from "react"
+import { use, useMemo, useState } from "react"
 import Pagination from "@/app/components/Pagination/Pagination"
 
 export default function Products({
@@ -23,6 +23,7 @@ export default function Products({
   itemsPerPage?: number
 }) {
   const allProducts = use(products)
+  const [failedImages, setFailedImages] = useState<Set<string>>(new Set())
 
   const filteredProducts = useMemo(() => {
     return allProducts.filter((product) => {
@@ -45,6 +46,10 @@ export default function Products({
   const endIndex = startIndex + itemsPerPage
   const paginatedProducts = filteredProducts.slice(startIndex, endIndex)
 
+  const handleImageError = (productId: string) => {
+    setFailedImages((prev) => new Set(prev).add(productId))
+  }
+
   return (
     <>
       <div className={styles.container}>
@@ -63,13 +68,19 @@ export default function Products({
               <Link key={product.id} href={`/${product.id}`} className={styles.gameCard}>
                 <div className={styles.gameImageWrapper}>
                   <Image
-                    src={product.image || "/placeholder.svg"}
+                    src={
+                      failedImages.has(product.id)
+                        ? "/placeholder.svg?height=273&width=205&query=game cover"
+                        : product.image || "/placeholder.svg?height=273&width=205&query=game cover"
+                    }
                     alt={product.title}
                     width="205"
                     height="273"
                     style={{ objectFit: "cover" }}
                     priority={true}
                     className={styles.gameImage}
+                    onError={() => handleImageError(product.id)}
+                    unoptimized={false}
                   />
                   <div className={styles.gradientOverlay} />
                 </div>

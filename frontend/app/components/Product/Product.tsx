@@ -3,11 +3,12 @@ import styles from "@/app/components/Product/Profile.module.css"
 import Link from "next/link"
 import { ArrowLeft, ExternalLink, Star } from "lucide-react"
 import type { ProductTypes } from "@/app/_types/product.types"
-import { use } from "react"
+import { use, useState } from "react"
 import Image from "next/image"
 
 export default function Product({ product }: { product: Promise<ProductTypes> }) {
   const game = use(product)
+  const [imageError, setImageError] = useState(false)
 
   return (
     <>
@@ -20,12 +21,18 @@ export default function Product({ product }: { product: Promise<ProductTypes> })
 
           <div className={styles.grid}>
             <Image
-              src={game.image || "/placeholder.svg"}
+              src={
+                imageError
+                  ? "/placeholder.svg?height=360&width=640&query=game placeholder"
+                  : game.image || "/placeholder.svg?height=360&width=640&query=game placeholder"
+              }
               alt={`image of ${game.title}`}
               width={640}
               height={360}
               style={{ objectFit: "cover" }}
               className={styles.gameImage}
+              onError={() => setImageError(true)}
+              unoptimized={false}
             />
 
             <div className={styles.gameInfo}>
