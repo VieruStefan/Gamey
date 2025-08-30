@@ -46,7 +46,10 @@ public class DiscoveryListener {
          for (ProductDTO dto : products) {
             int i = products.indexOf(dto);
             if (items != null && !items.isEmpty() && i < items.size()) {
-               dto.setImage(URLDecoder.decode(items.get(i).getImage(), StandardCharsets.UTF_8));
+               String image = items.get(i).getImage();
+               logger.debug("Adding image: {}", image);
+               logger.debug("Decoded version of the image: {}", URLDecoder.decode(image, StandardCharsets.UTF_8));
+               dto.setImage(URLDecoder.decode(image, StandardCharsets.UTF_8));
             }
             logger.info("Processing product {} with API Details", dto.getTitle());
             String productJson = objectMapper.writeValueAsString(dto);
