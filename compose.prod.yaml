@@ -67,28 +67,15 @@ services:
       - "8095:8095"
     networks:
       - app-network
-    volumes:
-      - ./okhttp-cache:/okhttp-cache
 
   kafka:
-    image: confluentinc/cp-kafka:latest
+    build:
+      context: ./Kafka
+      dockerfile: Dockerfile
+    ports:
+      - "9092:9092"
     networks:
       - app-network
-    environment:
-      CLUSTER_ID: 'IdILjb8pSgadtg2Huzaz0g'
-      KAFKA_PROCESS_ROLES: 'broker,controller'
-      KAFKA_NODE_ID: 1
-      KAFKA_REST_CONSUMER_MAX_POLL_INTERVAL_MS: 464000
-      KAFKA_LISTENERS: 'PLAINTEXT://kafka:9092,CONTROLLER://kafka:9093'
-      KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://kafka:9092'
-      KAFKA_INTER_BROKER_LISTENER_NAME: 'PLAINTEXT'
-      KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
-      KAFKA_CONTROLLER_QUORUM_VOTERS: '1@kafka:9093'
-
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
-      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
-      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
 
   mongodb:
     image: mongo:latest
