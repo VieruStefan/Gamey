@@ -2,12 +2,12 @@
 import styles from "@/app/components/Product/Profile.module.css"
 import Link from "next/link"
 import { ArrowLeft, ExternalLink, Star } from "lucide-react"
-import type { ProductTypes } from "@/app/_types/product.types"
+import type { GameTypes } from "@/app/_types/gameTypes"
 import { use, useState } from "react"
 import Image from "next/image"
 
-export default function Product({ product }: { product: Promise<ProductTypes> }) {
-  const game = use(product)
+export default function Game({ params }: { params: Promise<GameTypes> }) {
+  const game = use(params)
   const [imageError, setImageError] = useState(false)
 
   const isValidUrl = (url: string | undefined | null): boolean => {
@@ -49,33 +49,33 @@ export default function Product({ product }: { product: Promise<ProductTypes> })
 
             <div className={styles.gameInfo}>
               <h1 className={styles.gameTitle}>{game.title}</h1>
-              <div className={styles.tags}>
-                <span className={styles.platformTag}>{game.platform}</span>
-              </div>
-              <div className={styles.rating}>
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className={i < game.rating ? styles.starFilled : styles.starEmpty} />
-                ))}
-                <span className={styles.ratingValue}>{game.rating}</span>
-                <span className={styles.reviews}>({game.reviews} reviews)</span>
-              </div>
+                <div className={styles.tags}>
+                    {game.sources?.map((source) => (
+                        <span key={source.url} className={styles.platformTag}>
+                            {source.platform}
+                        </span>
+                    ))}
+                </div>
             </div>
 
-            <div className={styles.sideSection}>
-              <div className={styles.priceCard}>
-                <div>
-                  <p className={styles.priceStore}>
-                    {isValidUrl(game.url) ? new URL(game.url).hostname.replace("www.", "") : "Unknown Store"}
-                  </p>
-                  <p className={styles.priceValue}>{game.price} RON</p>
-                </div>
-                {isValidUrl(game.url) && (
-                  <a href={game.url} className={styles.visitButton} target="_blank" rel="noopener noreferrer">
-                    Vizitează <ExternalLink className="h-4 w-4" />
-                  </a>
-                )}
+              <div className={styles.sideSection}>
+                  {game.sources?.map((source) => (
+                      <div key={source.url} className={styles.priceCard}>
+                          <div>
+                              <p className={styles.priceStore}>
+                                  {/* We now use the URL from the 'source' object */}
+                                  {new URL(source.url).hostname.replace("www.", "")}
+                              </p>
+                              <p className={styles.priceValue}>
+                                  X RON
+                              </p>
+                          </div>
+                          <a href={source.url} className={styles.visitButton} target="_blank" rel="noopener noreferrer">
+                              Vizitează <ExternalLink className="h-4 w-4" />
+                          </a>
+                      </div>
+                  ))}
               </div>
-            </div>
           </div>
         </main>
       </div>

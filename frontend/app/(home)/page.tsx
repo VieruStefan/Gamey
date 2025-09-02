@@ -1,7 +1,7 @@
-import { getProducts } from "@/app/_lib/data"
+import { getGames } from "@/app/_lib/data"
 import { Suspense } from "react"
 import Loading from "./loading"
-import Products from "@/app/components/Products/Products"
+import Games from "@/app/components/Products/Games"
 import Sidebar from "@/app/components/Sidebar/Sidebar"
 import styles from "@/app/components/Home.module.css"
 import { redirect } from "next/navigation"
@@ -15,14 +15,20 @@ export default async function HomePage({
         maxPrice?: string
         search?: string
         page?: string
+        size?: string
     }
 }) {
     const platform = searchParams?.platform || "all"
     const priceRange: [number, number] = [Number(searchParams?.minPrice) || 0, Number(searchParams?.maxPrice) || 500]
     const searchQuery = searchParams?.search || ""
-    const currentPage = Number(searchParams?.page) || 1
+    const currentPage = Number(searchParams?.page) || 0
+    const size = Number(searchParams?.size) || 10
 
-    const products = getProducts()
+    const page = getGames({
+        "page": currentPage,
+        "size": size,
+        "search": searchQuery,
+    })
 
     async function handleSearch(formData: FormData) {
         'use server'
@@ -36,6 +42,7 @@ export default async function HomePage({
             params.delete('search')
         }
         params.set('page', '1')
+        params.set('size', '10')
 
         redirect(`/?${params.toString()}`)
     }
@@ -47,12 +54,13 @@ export default async function HomePage({
             </Suspense>
             <div className={styles.mainContent}>
                 <Suspense fallback={<Loading />}>
-                    <Products
-                        products={products}
+                    <Games
+                        data={page}
                         searchQuery={searchQuery}
                         platform={platform}
                         priceRange={priceRange}
                         currentPage={currentPage}
+                        itemsPerPage={size}
                         handleSearch={handleSearch}
                     />
                 </Suspense>

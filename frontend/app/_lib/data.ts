@@ -1,84 +1,23 @@
-import type { ProductTypes } from "@/app/_types/product.types"
+import type {GameTypes, Page} from "@/app/_types/gameTypes"
 
-const mockProducts: ProductTypes[] = [
-    {
-        id: "1",
-        title: "Sample Product 1",
-        price: "80.99",
-        image: "/generic-product-display.png",
-        platform: "Electronics",
-        url: "",
-        gameId: ""
-    },
-    {
-        id: "2",
-        title: "Sample Product 2",
-        price: "99.99",
-        image: "/sample-product-2.png",
-        platform: "Accessories",
-        url: "",
-        gameId: ""
-    },
-]
-
-export const getProducts = async (): Promise<ProductTypes[]> => {
-  try {
-    const gatewayUrl = process.env.NEXT_PUBLIC_GATEWAY_URL
-    if (!gatewayUrl) {
-      console.warn("[v0] NEXT_PUBLIC_GATEWAY_URL not set, using mock data")
-      return mockProducts
+const getReq = (page: number, size: number, search?: string) => {
+    let req = `page=${page}&size=${size}`
+    if (search !== undefined && search !== "") {
+        req += `&search=${search}`
     }
-
-    const response = await fetch(`${gatewayUrl}/gamedata/api/products`)
-
-    if (!response.ok) {
-      console.error("[v0] API response not ok:", response.status, response.statusText)
-      return mockProducts
-    }
-
-    const contentType = response.headers.get("content-type")
-    if (!contentType || !contentType.includes("application/json")) {
-      console.error("[v0] API returned non-JSON response:", contentType)
-      const text = await response.text()
-      console.error("[v0] Response body:", text.substring(0, 200))
-      return mockProducts
-    }
-
-    const data = await response.json()
-    return Array.isArray(data) ? data : mockProducts
-  } catch (error) {
-    console.error("[v0] Error fetching products:", error)
-    return mockProducts
-  }
+    return req
 }
 
-export const getProduct = async (id: string): Promise<ProductTypes | null> => {
-  try {
+export const getGames = async (req: any): Promise<Page<GameTypes>> => {
     const gatewayUrl = process.env.NEXT_PUBLIC_GATEWAY_URL
-    if (!gatewayUrl) {
-      console.warn("[v0] NEXT_PUBLIC_GATEWAY_URL not set, using mock data")
-      return mockProducts.find((p) => p.id === id) || mockProducts[0]
-    }
+    const response = await fetch(`${gatewayUrl}/gamedata/api/products?${getReq(req["page"], req["size"], req["search"])}`)
 
-    const response = await fetch(`${gatewayUrl}/gamedata/api/products/${id}`)
+    return await response.json()
+}
 
-    if (!response.ok) {
-      console.error("[v0] API response not ok:", response.status, response.statusText)
-      return mockProducts.find((p) => p.id === id) || mockProducts[0]
-    }
+export const getGame = async (gameId: string): Promise<GameTypes | null> => {
+    const gatewayUrl = process.env.NEXT_PUBLIC_GATEWAY_URL
+    const response = await fetch(`${gatewayUrl}/gamedata/api/products/${gameId}`)
 
-    const contentType = response.headers.get("content-type")
-    if (!contentType || !contentType.includes("application/json")) {
-      console.error("[v0] API returned non-JSON response:", contentType)
-      const text = await response.text()
-      console.error("[v0] Response body:", text.substring(0, 200))
-      return mockProducts.find((p) => p.id === id) || mockProducts[0]
-    }
-
-    const data = await response.json()
-    return data
-  } catch (error) {
-    console.error("[v0] Error fetching product:", error)
-    return mockProducts.find((p) => p.id === id) || mockProducts[0]
-  }
+    return await response.json()
 }
