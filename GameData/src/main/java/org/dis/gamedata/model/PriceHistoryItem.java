@@ -8,4 +8,5 @@ import lombok.Data;
 class PriceHistoryItem {
    private String jobId;
    private String price;
+   private String scrapedAt;
 }

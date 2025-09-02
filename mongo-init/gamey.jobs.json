@@ -1,0 +1,35 @@
+[{
+  "_id": "42787e07-6ae3-44a9-b54a-0e167b68b450",
+  "date": {
+    "$date": "2025-05-15T10:30:00.000Z"
+  },
+  "_class": "org.dis.gamedata.model.Job"
+},
+{
+  "_id": "f35be1ce-e93c-4d93-a935-392de5a23b25",
+  "date": {
+    "$date": "2025-06-21T12:00:00.000Z"
+  },
+  "_class": "org.dis.gamedata.model.Job"
+},
+{
+  "_id": "0c418922-4d22-43c9-8f5b-f60a9d7ff268",
+  "date": {
+    "$date": "2025-07-08T18:45:00.000Z"
+  },
+  "_class": "org.dis.gamedata.model.Job"
+},
+{
+  "_id": "0d597064-6e25-49a8-87f0-3b0273d2ceec",
+  "date": {
+    "$date": "2025-08-22T09:05:00.000Z"
+  },
+  "_class": "org.dis.gamedata.model.Job"
+},
+{
+  "_id": "e97dc623-ebf6-4f17-afd4-0abdda91b63c",
+  "date": {
+    "$date": "2025-09-01T14:20:00.000Z"
+  },
+  "_class": "org.dis.gamedata.model.Job"
+}]

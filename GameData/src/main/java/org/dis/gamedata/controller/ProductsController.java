@@ -30,19 +30,19 @@ public class ProductsController {
       this.reactiveMongoTemplate = reactiveMongoTemplate;
    }
 
-   @GetMapping
+   @GetMapping("/all_products/")
    public Flux<ProductDTO> getProducts() {
       return productRepository.findAll()
             .map(productMapper::toDto);
    }
 
-   @GetMapping("{id}")
+   @GetMapping("/all_products/{id}")
    public Mono<ProductDTO> getProduct(@PathVariable String id) {
       return productRepository.findById(id)
             .map(productMapper::toDto);
    }
 
-   @GetMapping("/aggregation/")
+   @GetMapping
    public Mono<Page<AggregatedProduct>> findProductsWithDuplicateGameId(
          @RequestParam(required = false) String search,
          @RequestParam(required = false) String platform,
@@ -103,5 +103,58 @@ public class ProductsController {
                   pageable,
                   result.getTotal()
             ));
+   }
+
+   @GetMapping("/{gameId}")
+   public Mono<AggregatedProduct> findSingleGameById(@PathVariable String gameId) {
+      MatchOperation matchGameById = Aggregation.match(
+            Criteria.where("gameId").is(gameId)
+      );
+
+      LookupOperation lookupJobs = Aggregation.lookup(
+            "jobs",
+            "jobId",
+            "_id",
+            "jobDetails"
+      );
+
+      UnwindOperation unwindJobDetails = Aggregation.unwind("jobDetails");
+
+      GroupOperation groupByURLAndPlatform = Aggregation.group("url", "platform")
+            .first("title").as("title")
+            .first("image").as("image")
+            .first("gameId").as("gameId")
+            .push(
+                  new Document("jobId", "$jobId")
+                        .append("price", "$price")
+                        .append("scrapedAt", "$jobDetails.date") // <-- MODIFIED: Add the date here
+            ).as("priceHistory");
+
+      GroupOperation groupByGameId = Aggregation.group("gameId")
+            .first("title").as("title")
+            .first("image").as("image")
+            .push(
+                  new Document("url", "$_id.url")
+                        .append("platform", "$_id.platform")
+                        .append("priceHistory", "$priceHistory")
+            ).as("sources");
+
+      ProjectionOperation projectToFinalDTO = Aggregation.project()
+            .and("_id").as("gameId")
+            .and("title").as("title")
+            .and("image").as("image")
+            .and("sources").as("sources");
+
+      Aggregation aggregation = Aggregation.newAggregation(
+            matchGameById,
+            lookupJobs,
+            unwindJobDetails,
+            groupByURLAndPlatform,
+            groupByGameId,
+            projectToFinalDTO
+      );
+
+      return reactiveMongoTemplate.aggregate(aggregation, "products", AggregatedProduct.class)
+            .singleOrEmpty();
    }
 }
