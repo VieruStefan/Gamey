@@ -1,5 +1,6 @@
 package org.dis.diffbotapi.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -7,12 +8,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
 @Service
 public class DiffbotServiceImpl implements DiffbotService {
    private static final Logger logger = LoggerFactory.getLogger(DiffbotServiceImpl.class);
+   private final ObjectMapper objectMapper = new ObjectMapper();
    private final OkHttpClient okHttpClient;
    @Value("${diffbot.api.token}")
    private String apiToken;
@@ -35,11 +39,7 @@ public class DiffbotServiceImpl implements DiffbotService {
    }
 
    @Override
-   public synchronized void sendRequest(String api, String resource) {
-      if (!api.equals("list")) {
-         logger.error("Invalid api received. Only \"list\" API is supported.");
-      }
-
+   public synchronized void sendRequest(String jobId, String resource) {
       final String requestId = UUID.randomUUID().toString().substring(0, 8);
       String url = generateUrl(resource);
       Request request = new Request.Builder()
@@ -50,7 +50,10 @@ public class DiffbotServiceImpl implements DiffbotService {
       try (Response response = call.execute()) {
          String responseBody = response.body().string();
          logger.info("[{}] Completed request for uri={} with body={}", requestId, url, responseBody.substring(0, 128));
-         kafkaService.sendMessage("api.responses", responseBody);
+         Map<String, String> apiResponse = new HashMap<>();
+         apiResponse.put("products", responseBody);
+         apiResponse.put("jobId", jobId);
+         kafkaService.sendMessage("api.responses", objectMapper.writeValueAsString(apiResponse));
       } catch (IOException e) {
          logger.warn("[{}] Error during request for uri={}", requestId, url, e);
       }

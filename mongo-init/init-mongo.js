@@ -6,5 +6,13 @@ db.createUser({
         { role: "read", db: "gamey" }
     ]
 });
+db.createUser({
+    user: "admin",
+    pwd: "admin",
+    roles: [
+        { role: "readWrite", db: "gamey" }
+    ]
+});
 db.createCollection('products');
-db.products.createIndex({ "url": 1 }, { unique: true })
+db.createCollection('jobs');
+db.products.createIndex({ "url": 1, "jobId": 1 }, { unique: true })

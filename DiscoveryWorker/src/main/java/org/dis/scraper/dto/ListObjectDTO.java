@@ -7,7 +7,7 @@ import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
-public class ListObjectDto {
+public class ListObjectDTO {
    private String type;
    private String pageUrl;
    private List<String> nextPages;

@@ -7,6 +7,7 @@ import org.dis.worker.detail.service.GameIdGeneratorWithSlug;
 import org.dis.worker.detail.service.dto.ProductDTO;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
 import java.util.UUID;
@@ -15,6 +16,7 @@ import java.util.UUID;
 public interface ProductMapper {
    ProductDTO toDto(Product product);
 
+   @Mapping(target = "jobId", ignore = true)
    Product toEntity(ProductDTO productDto);
 
    @AfterMapping

@@ -7,8 +7,8 @@ import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
-public class DiffbotResponseDto
+public class DiffbotResponseDTO
 {
    private Object request;
-   private List<ListObjectDto> objects;
+   private List<ListObjectDTO> objects;
 }

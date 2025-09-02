@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.dis.worker.detail.model.Product;
 import org.dis.worker.detail.repository.ProductRepository;
+import org.dis.worker.detail.service.dto.ApiRequest;
 import org.dis.worker.detail.service.dto.ProductDTO;
 import org.dis.worker.detail.service.mapper.ProductMapper;
 import org.slf4j.Logger;
@@ -27,10 +28,12 @@ public class DetailListener {
    @KafkaListener(topics = "gamedata.products", groupId = "website-scraping")
    public void receiveProduct(String productJson) {
       try {
-         ProductDTO productDto = objectMapper.readValue(productJson, ProductDTO.class);
+         ApiRequest apiRequest = objectMapper.readValue(productJson, ApiRequest.class);
+         ProductDTO productDto = objectMapper.readValue(apiRequest.getProduct(), ProductDTO.class);
          logger.debug("Deserialized product: {}.", productDto);
          Product product = productMapper.toEntity(productDto);
-         logger.info("Added product {} to database.", product.toString());
+         product.setJobId(apiRequest.getJobId());
+         logger.info("Added product {} to database.", objectMapper.writeValueAsString(product));
          productRepository.save(product).subscribe();
       }
       catch (JsonProcessingException e) {
