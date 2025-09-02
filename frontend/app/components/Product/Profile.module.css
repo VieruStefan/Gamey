@@ -1,245 +1,195 @@
+/* In your Profile.module.css file */
+
+/* --- 1. Design System (Variables) --- */
+:root {
+    --color-bg-primary: #0f172a;    /* slate-900 */
+    --color-bg-secondary: #1e293b; /* slate-800 */
+    --color-border: #334155;       /* slate-700 */
+    --color-text-primary: #f1f5f9;   /* slate-100 */
+    --color-text-secondary: #94a3b8; /* slate-400 */
+    --color-accent: #f97316;        /* orange-500 */
+    --color-accent-hover: #ea580c;  /* orange-600 */
+
+    --spacing-xs: 0.25rem;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 2rem;
+
+    --border-radius: 0.5rem;
+    --transition-speed: 0.2s ease-in-out;
+}
+
+/* --- 2. Main Layout & Page Structure --- */
 .pageWrapper {
-  min-height: 100vh;
-  background-color: #0f172a;
-  padding: 2rem;
-  color: #f1f5f9;
+    min-height: 100vh;
+    background-color: var(--color-bg-primary);
+    padding: var(--spacing-xl);
+    color: var(--color-text-primary);
 }
 
 .main {
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.backButton {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem;
-  background-color: #0f172a;
-  color: #ffffff;
-  border-radius: 0.5rem;
-  text-decoration: none;
-  font-weight: bold;
-  margin-bottom: 10px;
-}
-
-.backButton:hover {
-  color: #f97316;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .grid {
-  display: grid;
-  grid-template-columns: 200px 2fr 1fr;
-  gap: 2rem;
-}
-
-.gameImage {
-  width: 200px;
-  height: auto;
-  border-radius: 0.5rem;
-  object-fit: cover;
-}
-
-.gameImageCover {
-  width: 200px;
-  height: auto;
-  border-radius: 0.5rem;
-  object-fit: cover;
+    display: grid;
+    /* A more robust layout: Image fixed size, info takes remaining space */
+    grid-template-columns: 200px 1fr;
+    gap: var(--spacing-xl);
 }
 
 .gameInfo {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+    display: flex;
+    flex-direction: column;
 }
 
+/* --- 3. Components --- */
+
+/* Back Button */
+.backButton {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-lg);
+    color: var(--color-text-primary);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color var(--transition-speed);
+}
+
+.backButton:hover {
+    color: var(--color-accent);
+}
+
+/* Game Image */
+.gameImageCover {
+    width: 200px;
+    height: auto;
+    border-radius: var(--border-radius);
+    object-fit: cover;
+    border: 1px solid var(--color-border);
+}
+
+/* Title & Tags */
 .gameTitle {
-  font-size: 2rem;
-  font-weight: bold;
+    font-size: 2.5rem;
+    font-weight: 800;
+    line-height: 1.2;
 }
 
 .tags {
-  display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
+    display: flex;
+    gap: var(--spacing-sm);
+    flex-wrap: wrap;
+    margin-top: var(--spacing-md);
 }
 
 .platformTag {
-  background-color: #334155;
-  color: #e2e8f0;
-  padding: 0.25rem 0.5rem;
-  border-radius: 0.25rem;
-  font-size: 0.875rem;
+    background-color: var(--color-border);
+    color: var(--color-text-primary);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: 999px; /* Pill shape */
+    font-size: 0.8rem;
+    font-weight: 500;
 }
 
-.genreTag {
-  border: 1px solid #f97316;
-  color: #f97316;
-  padding: 0.25rem 0.5rem;
-  border-radius: 0.25rem;
-  font-size: 0.875rem;
-}
-
-.rating {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.starFilled {
-  color: #f97316;
-}
-
-.starEmpty {
-  color: #475569;
-}
-
-.ratingValue {
-  font-weight: bold;
-}
-
-.reviews {
-  color: #94a3b8;
-}
-
-.sideSection {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+/* Sources Grid (Price Cards) */
+.sourcesGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-lg);
 }
 
 .priceCard {
-  background-color: #1e293b;
-  padding: 1rem;
-  border-radius: 0.5rem;
-  border: 1px solid #334155;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+    background-color: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-md);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+}
+
+.priceCard:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
 }
 
 .priceStore {
-  font-weight: 500;
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: var(--spacing-xs);
 }
 
 .priceValue {
-  font-weight: bold;
-  color: #f97316;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-accent);
+}
+
+.cardFooter {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: var(--spacing-md);
 }
 
 .visitButton {
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-  background-color: #f97316;
-  color: #fff;
-  border: none;
-  padding: 0.25rem 0.5rem;
-  border-radius: 0.25rem;
-  cursor: pointer;
-  text-decoration: none;
-  font-size: 0.875rem;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    background-color: var(--color-accent);
+    color: #fff;
+    border: none;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 600;
+    transition: background-color var(--transition-speed);
 }
 
 .visitButton:hover {
-  background-color: #ea580c;
+    background-color: var(--color-accent-hover);
 }
 
-.reviewsSection {
-  margin-top: 2rem;
-  padding-top: 1rem;
-  border-top: 1px solid #ccc;
-  color: #f97316;
+/* Chart Section */
+.chartSection {
+    grid-column: 1 / -1; /* Make chart span both columns of the main grid */
+    margin-top: var(--spacing-xl);
+    background-color: var(--color-bg-secondary);
+    padding: var(--spacing-lg);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--color-border);
 }
 
-.reviewsSection h2 {
-  font-size: 1.25rem;
-  margin-bottom: 0.5rem;
+/* --- 4. Responsive Design --- */
+@media (max-width: 900px) {
+    .grid {
+        /* Stack image and info vertically */
+        grid-template-columns: 1fr;
+    }
+    .gameImageCover {
+        width: 150px; /* Make image smaller in the stack */
+    }
+    .sourcesGrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
-.commentList {
-  margin-top: 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.commentCard {
-  padding: 0.75rem 1rem;
-  border-bottom: 1px solid #555;
-}
-
-.commentUsername {
-  font-weight: bold;
-  color: #f97316;
-  margin-bottom: 0.25rem;
-}
-
-.commentText {
-  font-size: 0.95rem;
-  color: #ffffff;
-}
-
-@media (max-width: 768px) {
-  .pageWrapper {
-    padding: 1rem;
-  }
-
-  .grid {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
-
-  .gameImage {
-    width: 100%;
-    height: auto;
-  }
-
-  .gameTitle {
-    font-size: 1.5rem;
-  }
-
-  .tags {
-    gap: 0.25rem;
-  }
-
-  .priceCard {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
-  }
-
-  .visitButton {
-    width: 100%;
-    justify-content: center;
-  }
-}
-
-@media (max-width: 480px) {
-  .gameTitle {
-    font-size: 1.25rem;
-  }
-
-  .platformTag,
-  .genreTag {
-    font-size: 0.75rem;
-    padding: 0.2rem 0.4rem;
-  }
-
-  .priceValue {
-    font-size: 1rem;
-  }
-
-  .backButton {
-    padding: 0.4rem 0.75rem;
-    font-size: 0.875rem;
-  }
-
-  .reviewsSection h2 {
-    font-size: 1.1rem;
-  }
-
-  .commentText {
-    font-size: 0.9rem;
-  }
+@media (max-width: 600px) {
+    .pageWrapper {
+        padding: var(--spacing-md);
+    }
+    .gameTitle {
+        font-size: 1.75rem;
+    }
+    .sourcesGrid {
+        grid-template-columns: 1fr;
+    }
 }
