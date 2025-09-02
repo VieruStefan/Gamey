@@ -37,6 +37,22 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+    --color-bg-primary: #0f172a;    /* slate-900 */
+    --color-bg-secondary: #1e293b; /* slate-800 */
+    --color-border: #334155;       /* slate-700 */
+    --color-text-primary: #f1f5f9;   /* slate-100 */
+    --color-text-secondary: #94a3b8; /* slate-400 */
+    --color-accent: #f97316;        /* orange-500 */
+    --color-accent-hover: #ea580c;  /* orange-600 */
+
+    --spacing-xs: 0.25rem;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 2rem;
+
+    --border-radius: 0.5rem;
+    --transition-speed: 0.2s ease-in-out;
 }
 
 .dark {
