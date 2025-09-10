@@ -16,7 +16,6 @@ EXPOSE 8888
 RUN mkdir /app
 RUN mkdir /cache
 
-COPY ./okhttp-cache /okhttp-cache
 COPY --from=build /home/gradle/src/build/libs/*.jar /app/application.jar
 
 ENTRYPOINT ["java", "-jar", "/app/application.jar"]

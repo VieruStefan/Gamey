@@ -67,6 +67,8 @@ services:
       - "8095:8095"
     networks:
       - app-network
+    volumes:
+      - ./okhttp-cache:/okhttp-cache
 
   kafka:
     build:
