@@ -93,12 +93,16 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: root
 
   mongodb-exporter:
-    image: percona/mongodb_exporter:0.47.0
+    image: bitnami/mongodb-exporter:0.20.6
     ports:
       - "9216:9216"
     networks:
       - app-network
-    command: --mongodb.uri=“mongodb://mongodb:27017” --collect-all --discovering-mode
+    environment:
+      - MONGODB_URI=mongodb://exporter:exporterpass@mongodb:27017/admin
+    depends_on:
+      - mongodb
+    restart: unless-stopped
 
   prometheus:
     image: prom/prometheus
@@ -124,6 +128,15 @@ services:
       - app-network
     volumes:
       - 'grafana_storage:/var/lib/grafana'
+
+  kafka-exporter:
+    image: danielqsj/kafka-exporter:latest
+    ports:
+      - "9308:9308"
+    command:
+      - '--kafka.server=kafka:9092'
+    networks:
+      - app-network
 
 networks:
   app-network:

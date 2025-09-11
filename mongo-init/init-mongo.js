@@ -16,3 +16,14 @@ db.createUser({
 db.createCollection('products');
 db.createCollection('jobs');
 db.products.createIndex({ "url": 1, "jobId": 1 }, { unique: true })
+db = db.getSiblingDB('admin');
+db.createUser({
+    user: 'exporter',
+    pwd: 'exporterpass',
+    roles: [
+        { role: 'read', db: 'admin' },
+        { role: 'clusterMonitor', db: 'admin' },
+        { role: 'read', db: 'local' },
+        { role: 'readAnyDatabase', db: 'admin' }
+    ]
+});
